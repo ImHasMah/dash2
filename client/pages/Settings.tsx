@@ -34,6 +34,14 @@ import {
   User,
   Palette,
   Globe,
+  Smartphone,
+  Monitor,
+  Zap,
+  AlertTriangle,
+  CheckCircle,
+  Info,
+  Download,
+  Upload,
 } from "lucide-react";
 
 interface StoreSettings {
@@ -106,6 +114,18 @@ interface StoreSettings {
   // Admin Settings
   adminPassword?: string;
   adminEmail?: string;
+
+  // New Advanced Settings
+  enableNotifications?: boolean;
+  enableAnalytics?: boolean;
+  enableBackup?: boolean;
+  maxImageSize?: number;
+  enableImageCompression?: boolean;
+  enableAutoSave?: boolean;
+  enableDarkMode?: boolean;
+  enableAccessibility?: boolean;
+  enablePerformanceMode?: boolean;
+  enableDebugMode?: boolean;
 }
 
 export default function Settings() {
@@ -162,10 +182,21 @@ export default function Settings() {
     autoScrollToSummary: true,
     adminPassword: "",
     adminEmail: "",
+    enableNotifications: true,
+    enableAnalytics: true,
+    enableBackup: true,
+    maxImageSize: 5,
+    enableImageCompression: true,
+    enableAutoSave: true,
+    enableDarkMode: false,
+    enableAccessibility: true,
+    enablePerformanceMode: false,
+    enableDebugMode: false,
   });
 
   const [hasChanges, setHasChanges] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const savedSettings = localStorage.getItem("storeSettings");
@@ -191,14 +222,25 @@ export default function Settings() {
     setHasChanges(true);
   };
 
-  const saveSettings = () => {
-    localStorage.setItem("storeSettings", JSON.stringify(settings));
-    setHasChanges(false);
-    showDialog({
-      title: t("settings.saveSuccess"),
-      message: t("settings.saveSuccess"),
-      type: "success",
-    });
+  const saveSettings = async () => {
+    setIsSaving(true);
+    try {
+      localStorage.setItem("storeSettings", JSON.stringify(settings));
+      setHasChanges(false);
+      showDialog({
+        title: t("settings.saveSuccess"),
+        message: t("settings.saveSuccess"),
+        type: "success",
+      });
+    } catch (error) {
+      showDialog({
+        title: t("settings.saveError"),
+        message: t("settings.saveError"),
+        type: "error",
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const resetSettings = () => {
@@ -213,31 +255,73 @@ export default function Settings() {
     });
   };
 
+  const exportSettings = () => {
+    const dataStr = JSON.stringify(settings, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'store-settings.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importSettings = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importedSettings = JSON.parse(e.target?.result as string);
+          setSettings((prev) => ({ ...prev, ...importedSettings }));
+          setHasChanges(true);
+          showDialog({
+            title: t("checkout.settingsImported"),
+            message: t("checkout.settingsImported"),
+            type: "success",
+          });
+        } catch (error) {
+          showDialog({
+            title: t("checkout.importError"),
+            message: t("checkout.importError"),
+            type: "error",
+          });
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
   const tabs = [
     { id: "basic", label: t("settings.basicSettings"), icon: Store },
     { id: "delivery", label: t("settings.deliverySettings"), icon: Truck },
     { id: "payment", label: t("settings.paymentSettings"), icon: CreditCard },
     { id: "messages", label: t("settings.messageSettings"), icon: MessageSquare },
+         { id: "advanced", label: t("settings.advancedSettings"), icon: Zap },
     { id: "admin", label: t("settings.adminSettings"), icon: Shield },
   ];
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-4 sm:p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold auto-text">{t("settings.title")}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold auto-text">{t("settings.title")}</h1>
           <p className="text-muted-foreground auto-text">{t("settings.subtitle")}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {hasChanges && (
             <Badge variant="destructive" className="auto-text">
               {t("settings.unsavedChanges")}
             </Badge>
           )}
-          <Button onClick={saveSettings} disabled={!hasChanges} className="flex items-center gap-2">
+          <Button 
+            onClick={saveSettings} 
+            disabled={!hasChanges || isSaving} 
+            className="flex items-center gap-2"
+          >
             <Save className="w-4 h-4" />
-            {t("settings.save")}
+            {isSaving ? t("common.loading") : t("settings.save")}
           </Button>
           <Button variant="outline" onClick={resetSettings} className="flex items-center gap-2">
             <RefreshCw className="w-4 h-4" />
@@ -245,6 +329,36 @@ export default function Settings() {
           </Button>
         </div>
       </div>
+
+      {/* Import/Export Section */}
+      <Card className="bg-blue-50 border-blue-200">
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row gap-4 items-center">
+            <div className="flex items-center gap-2">
+              <Info className="w-5 h-5 text-blue-600" />
+                             <span className="auto-text text-sm font-medium">{t("checkout.backupRestore")}</span>
+            </div>
+            <div className="flex gap-2">
+                             <Button variant="outline" size="sm" onClick={exportSettings} className="flex items-center gap-2">
+                 <Download className="w-4 h-4" />
+                 {t("checkout.export")}
+               </Button>
+              <div className="relative">
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={importSettings}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                                 <Button variant="outline" size="sm" className="flex items-center gap-2">
+                   <Upload className="w-4 h-4" />
+                   {t("checkout.import")}
+                 </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Tab Navigation */}
       <div className="flex flex-wrap gap-2 border-b">
@@ -255,7 +369,7 @@ export default function Settings() {
               key={tab.id}
               variant={activeTab === tab.id ? "default" : "ghost"}
               onClick={() => setActiveTab(tab.id)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 text-sm"
             >
               <Icon className="w-4 h-4" />
               {tab.label}
@@ -296,6 +410,7 @@ export default function Settings() {
                     onChange={(e) => handleInputChange("storeDescription", e.target.value)}
                     placeholder={t("settings.storeDescription")}
                     className="auto-text"
+                    rows={3}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -364,6 +479,7 @@ export default function Settings() {
                     onChange={(e) => handleInputChange("contactAddress", e.target.value)}
                     placeholder={t("settings.contactAddress")}
                     className="auto-text"
+                    rows={3}
                   />
                 </div>
               </CardContent>
@@ -434,6 +550,7 @@ export default function Settings() {
                         value={settings.pickupAddressEn}
                         onChange={(e) => handleInputChange("pickupAddressEn", e.target.value)}
                         className="auto-text"
+                        rows={3}
                       />
                     </div>
                     <div>
@@ -443,6 +560,7 @@ export default function Settings() {
                         value={settings.pickupAddressAr}
                         onChange={(e) => handleInputChange("pickupAddressAr", e.target.value)}
                         className="auto-text"
+                        rows={3}
                       />
                     </div>
                   </>
@@ -529,6 +647,7 @@ export default function Settings() {
                     onChange={(e) => handleInputChange("bankAccountInfo", e.target.value)}
                     placeholder={t("settings.bankAccountPlaceholder")}
                     className="auto-text"
+                    rows={4}
                   />
                 </div>
               )}
@@ -555,6 +674,7 @@ export default function Settings() {
                     value={settings.orderSuccessMessageEn}
                     onChange={(e) => handleInputChange("orderSuccessMessageEn", e.target.value)}
                     className="auto-text"
+                    rows={4}
                   />
                 </div>
                 <div>
@@ -564,6 +684,7 @@ export default function Settings() {
                     value={settings.orderSuccessMessageAr}
                     onChange={(e) => handleInputChange("orderSuccessMessageAr", e.target.value)}
                     className="auto-text"
+                    rows={4}
                   />
                 </div>
               </CardContent>
@@ -616,6 +737,194 @@ export default function Settings() {
                     id="displayContact"
                     checked={settings.displayContact}
                     onCheckedChange={(checked) => handleInputChange("displayContact", checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Advanced Settings */}
+        {activeTab === "advanced" && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Performance & Optimization */}
+            <Card>
+              <CardHeader>
+                               <CardTitle className="flex items-center gap-2">
+                 <Zap className="w-5 h-5" />
+                 {t("settings.performanceOptimization")}
+               </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enablePerformanceMode" className="auto-text">Performance Mode</Label>
+                  <Switch
+                    id="enablePerformanceMode"
+                    checked={settings.enablePerformanceMode}
+                    onCheckedChange={(checked) => handleInputChange("enablePerformanceMode", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enableImageCompression" className="auto-text">Image Compression</Label>
+                  <Switch
+                    id="enableImageCompression"
+                    checked={settings.enableImageCompression}
+                    onCheckedChange={(checked) => handleInputChange("enableImageCompression", checked)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="maxImageSize" className="auto-text">Max Image Size (MB)</Label>
+                  <Input
+                    id="maxImageSize"
+                    type="number"
+                    value={settings.maxImageSize}
+                    onChange={(e) => handleInputChange("maxImageSize", parseInt(e.target.value))}
+                    className="ltr-text"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enableAutoSave" className="auto-text">Auto Save</Label>
+                  <Switch
+                    id="enableAutoSave"
+                    checked={settings.enableAutoSave}
+                    onCheckedChange={(checked) => handleInputChange("enableAutoSave", checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* User Experience */}
+            <Card>
+              <CardHeader>
+                                 <CardTitle className="flex items-center gap-2">
+                   <User className="w-5 h-5" />
+                   {t("settings.userExperience")}
+                 </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enableDarkMode" className="auto-text">Dark Mode</Label>
+                  <Switch
+                    id="enableDarkMode"
+                    checked={settings.enableDarkMode}
+                    onCheckedChange={(checked) => handleInputChange("enableDarkMode", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enableAccessibility" className="auto-text">Accessibility Features</Label>
+                  <Switch
+                    id="enableAccessibility"
+                    checked={settings.enableAccessibility}
+                    onCheckedChange={(checked) => handleInputChange("enableAccessibility", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enableNotifications" className="auto-text">Notifications</Label>
+                  <Switch
+                    id="enableNotifications"
+                    checked={settings.enableNotifications}
+                    onCheckedChange={(checked) => handleInputChange("enableNotifications", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enableAnalytics" className="auto-text">Analytics</Label>
+                  <Switch
+                    id="enableAnalytics"
+                    checked={settings.enableAnalytics}
+                    onCheckedChange={(checked) => handleInputChange("enableAnalytics", checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* System Settings */}
+            <Card>
+              <CardHeader>
+                                 <CardTitle className="flex items-center gap-2">
+                   <SettingsIcon className="w-5 h-5" />
+                   {t("settings.systemSettings")}
+                 </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enableBackup" className="auto-text">Auto Backup</Label>
+                  <Switch
+                    id="enableBackup"
+                    checked={settings.enableBackup}
+                    onCheckedChange={(checked) => handleInputChange("enableBackup", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enableDebugMode" className="auto-text">Debug Mode</Label>
+                  <Switch
+                    id="enableDebugMode"
+                    checked={settings.enableDebugMode}
+                    onCheckedChange={(checked) => handleInputChange("enableDebugMode", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enableDialogScroll" className="auto-text">Dialog Scroll</Label>
+                  <Switch
+                    id="enableDialogScroll"
+                    checked={settings.enableDialogScroll}
+                    onCheckedChange={(checked) => handleInputChange("enableDialogScroll", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="autoScrollToSummary" className="auto-text">Auto Scroll to Summary</Label>
+                  <Switch
+                    id="autoScrollToSummary"
+                    checked={settings.autoScrollToSummary}
+                    onCheckedChange={(checked) => handleInputChange("autoScrollToSummary", checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Operational Settings */}
+            <Card>
+              <CardHeader>
+                                 <CardTitle className="flex items-center gap-2">
+                   <AlertTriangle className="w-5 h-5" />
+                   {t("settings.operationalSettings")}
+                 </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="autoOrderConfirmation" className="auto-text">Auto Order Confirmation</Label>
+                  <Switch
+                    id="autoOrderConfirmation"
+                    checked={settings.autoOrderConfirmation}
+                    onCheckedChange={(checked) => handleInputChange("autoOrderConfirmation", checked)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="lowStockThreshold" className="auto-text">Low Stock Threshold</Label>
+                  <Input
+                    id="lowStockThreshold"
+                    type="number"
+                    value={settings.lowStockThreshold}
+                    onChange={(e) => handleInputChange("lowStockThreshold", parseInt(e.target.value))}
+                    className="ltr-text"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="maxOrderQuantity" className="auto-text">Max Order Quantity</Label>
+                  <Input
+                    id="maxOrderQuantity"
+                    type="number"
+                    value={settings.maxOrderQuantity}
+                    onChange={(e) => handleInputChange("maxOrderQuantity", parseInt(e.target.value))}
+                    className="ltr-text"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="orderProcessingTime" className="auto-text">Order Processing Time</Label>
+                  <Input
+                    id="orderProcessingTime"
+                    value={settings.orderProcessingTime}
+                    onChange={(e) => handleInputChange("orderProcessingTime", e.target.value)}
+                    className="auto-text"
                   />
                 </div>
               </CardContent>

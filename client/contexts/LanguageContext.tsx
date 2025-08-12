@@ -284,6 +284,13 @@ const translations = {
     "checkout.free": "Free",
     "checkout.deliveryDescription": "We'll deliver to your address",
     "checkout.pickupDescription": "Pick up from our store",
+    "checkout.whatsNext": "What's Next?",
+    "checkout.needHelp": "Need Help?",
+    "checkout.backupRestore": "Backup & Restore",
+    "checkout.export": "Export",
+    "checkout.import": "Import",
+    "checkout.settingsImported": "Settings have been imported successfully. Don't forget to save!",
+    "checkout.importError": "Failed to import settings. Please check the file format.",
 
     // Additional store keys
     "store.outOfStock": "Out of Stock",
@@ -354,6 +361,26 @@ const translations = {
       "Are you sure you want to reset all settings to default values?",
     "settings.unsavedChanges":
       "You have unsaved changes. Don't forget to save!",
+    "settings.advancedSettings": "Advanced Settings",
+    "settings.performanceMode": "Performance Mode",
+    "settings.imageCompression": "Image Compression",
+    "settings.maxImageSize": "Max Image Size (MB)",
+    "settings.autoSave": "Auto Save",
+    "settings.darkMode": "Dark Mode",
+    "settings.accessibilityFeatures": "Accessibility Features",
+    "settings.notifications": "Notifications",
+    "settings.analytics": "Analytics",
+    "settings.autoBackup": "Auto Backup",
+    "settings.debugMode": "Debug Mode",
+    "settings.dialogScroll": "Dialog Scroll",
+    "settings.autoScrollToSummary": "Auto Scroll to Summary",
+    "settings.autoOrderConfirmation": "Auto Order Confirmation",
+    "settings.lowStockThreshold": "Low Stock Threshold",
+    "settings.maxOrderQuantity": "Max Order Quantity",
+    "settings.orderProcessingTime": "Order Processing Time",
+    "settings.performanceOptimization": "Performance & Optimization",
+    "settings.userExperience": "User Experience",
+    "settings.systemSettings": "System Settings",
 
     // Store Information
     "settings.storeInformation": "Store Information",
@@ -397,24 +424,6 @@ const translations = {
     "settings.bankAccountInfo": "Bank Account Information",
     "settings.bankAccountPlaceholder":
       "Enter bank account details for customers...",
-
-    // Operational Settings
-    "settings.operationalSettings": "Operational Settings",
-    "settings.autoOrderConfirmation": "Auto Order Confirmation",
-    "settings.lowStockThreshold": "Low Stock Threshold",
-    "settings.maxOrderQuantity": "Max Order Quantity",
-    "settings.orderProcessingTime": "Order Processing Time",
-    "settings.deliveryConcerns": "Delivery Concerns (hours)",
-    "settings.pickupOrderConfig": "Pickup Order Config (hours)",
-    "settings.pickupAddress": "Pickup Address",
-    "settings.successScreen": "Success Screen",
-    "settings.successHeadline": "Success Headline",
-    "settings.successSubtext": "Success Subtext",
-    "settings.displayOrderNumber": "Display Order Number",
-    "settings.displayOrderItems": "Display Order Items",
-    "settings.displayTotals": "Display Totals",
-    "settings.displayNextSteps": "Display Next Steps",
-    "settings.displayContact": "Display Contact Info",
 
     // Order Messages
     "settings.orderMessages": "Order Messages",
@@ -683,6 +692,11 @@ const translations = {
     "checkout.prepareOrder": "سنقوم بتجهيز طلبك خلال 2-4 ساعات",
     "checkout.contactPhone": "سيتم التواصل معك عبر الهاتف للتأكيد",
     "checkout.deliveryTime": "التوصيل خلال 1-3 أيام عمل",
+    "checkout.backupRestore": "النسخ الاحتياطي والاستعادة",
+    "checkout.export": "تصدير",
+    "checkout.import": "استيراد",
+    "checkout.settingsImported": "تم استيراد الإعدادات بنجاح. لا تنس الحفظ!",
+    "checkout.importError": "فشل في استيراد الإعدادات. يرجى التحقق من تنسيق الملف.",
 
     // Additional store keys
     "store.outOfStock": "نفد المخزون",
@@ -751,6 +765,26 @@ const translations = {
     "settings.resetConfirm":
       "هل أنت متأكد من إعادة تعيين جميع الإعدادات للقيم الافتراضية؟",
     "settings.unsavedChanges": "لديك تغييرات غير محفوظة. لا تنس الحفظ!",
+    "settings.advancedSettings": "الإعدادات المتقدمة",
+    "settings.performanceMode": "وضع الأداء",
+    "settings.imageCompression": "ضغط الصور",
+    "settings.maxImageSize": "الحد الأقصى لحجم الصورة (ميجابايت)",
+    "settings.autoSave": "الحفظ التلقائي",
+    "settings.darkMode": "الوضع المظلم",
+    "settings.accessibilityFeatures": "ميزات إمكانية الوصول",
+    "settings.notifications": "الإشعارات",
+    "settings.analytics": "التحليلات",
+    "settings.autoBackup": "النسخ الاحتياطي التلقائي",
+    "settings.debugMode": "وضع التصحيح",
+    "settings.dialogScroll": "تمرير الحوار",
+    "settings.autoScrollToSummary": "التمرير التلقائي للملخص",
+    "settings.autoOrderConfirmation": "تأكيد الطلب التلقائي",
+    "settings.lowStockThreshold": "حد المخزون المنخفض",
+    "settings.maxOrderQuantity": "الحد الأقصى لكمية الطلب",
+    "settings.orderProcessingTime": "وقت معالجة الطلب",
+    "settings.performanceOptimization": "الأداء والتحسين",
+    "settings.userExperience": "تجربة المستخدم",
+    "settings.systemSettings": "إعدادات النظام",
     
     // Settings Tabs
     "settings.basicSettings": "الإعدادات الأساسية",
@@ -802,31 +836,6 @@ const translations = {
     "settings.deliveryFee": "رسوم التوصيل",
     "settings.freeDeliveryThreshold": "حد التوصيل المجاني",
     "settings.estimatedDeliveryTime": "الوقت المتوقع للتوصيل",
-
-    // Payment Settings
-    "settings.paymentSettings": "إعدادات الدفع",
-    "settings.cashOnDelivery": "الدفع عند التسليم",
-    "settings.bankTransfer": "التحويل البنكي",
-    "settings.bankAccountInfo": "معلومات الحساب البنكي",
-    "settings.bankAccountPlaceholder": "أدخل تفاصيل الحساب البنكي للعملاء...",
-
-    // Operational Settings
-    "settings.operationalSettings": "الإعدادات التشغيلية",
-    "settings.autoOrderConfirmation": "تأكيد الطلب التلقائي",
-    "settings.lowStockThreshold": "حد المخزون المنخفض",
-    "settings.maxOrderQuantity": "أقصى كمية للطلب",
-    "settings.orderProcessingTime": "وقت معالجة الطلب",
-    "settings.deliveryConcerns": "مخاوف التوصيل (ساعات)",
-    "settings.pickupOrderConfig": "إعداد طلب الاستلام (ساعات)",
-    "settings.pickupAddress": "عنوان الاستلام",
-    "settings.successScreen": "شاشة نجاح الطلب",
-    "settings.successHeadline": "عنوان النجاح",
-    "settings.successSubtext": "نص توضيحي للنجاح",
-    "settings.displayOrderNumber": "عرض رقم الطلب",
-    "settings.displayOrderItems": "عرض عناصر الطلب",
-    "settings.displayTotals": "عرض الإجماليات",
-    "settings.displayNextSteps": "عرض الخطوات التالية",
-    "settings.displayContact": "عرض معلومات التواصل",
 
     // Order Messages
     "settings.orderMessages": "رسائل الطلبات",
