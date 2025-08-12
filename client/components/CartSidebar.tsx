@@ -73,12 +73,12 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
                   <h3 className="text-xl font-semibold text-gray-700 auto-text">
                     {t("store.cartEmpty")}
                   </h3>
-                  <p className="text-gray-500 auto-text text-sm">
-                    {language === "ar" 
-                      ? "ابدأ التسوق لإضافة منتجات إلى سلتك" 
-                      : "Start shopping to add products to your cart"
-                    }
-                  </p>
+                                     <p className="text-gray-500 auto-text text-sm">
+                     {language === "ar" 
+                       ? t("store.startShoppingAr") 
+                       : t("store.startShopping")
+                     }
+                   </p>
                 </div>
                 <Button 
                   variant="outline" 
@@ -140,7 +140,7 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
                           {/* Price and Quantity Controls */}
                           <div className="flex items-center justify-between">
                             <div className="text-lg font-bold text-primary">
-                              {language === "ar" ? "د.ب " : "BD "}{item.price.toFixed(2)}
+                              {language === "ar" ? t("common.currencyAr") + " " : t("common.currency") + " "}{item.price.toFixed(2)}
                             </div>
                             
                             <div className="flex items-center gap-2">
@@ -194,10 +194,10 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
                           {/* Item Total */}
                           <div className="flex justify-between items-center pt-2 border-t border-gray-100">
                             <span className="text-sm text-gray-600 auto-text">
-                              {language === "ar" ? "المجموع" : "Total"}:
+                              {language === "ar" ? t("common.totalAr") : t("common.total")}:
                             </span>
                             <span className="text-lg font-bold text-gray-900">
-                              {language === "ar" ? "د.ب " : "BD "}{(item.price * item.quantity).toFixed(2)}
+                              {language === "ar" ? t("common.currencyAr") + " " : t("common.currency") + " "}{(item.price * item.quantity).toFixed(2)}
                             </span>
                           </div>
                         </div>
@@ -212,17 +212,17 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
                 <div className="w-full space-y-3">
                   <div className="flex justify-between items-center text-lg font-semibold">
                     <span className="auto-text text-gray-700">{t("store.cartTotal")}:</span>
-                    <span className="text-2xl font-bold text-primary">
-                      {language === "ar" ? "د.ب " : "BD "}{totalPrice.toFixed(2)}
-                    </span>
+                                         <span className="text-2xl font-bold text-primary">
+                       {language === "ar" ? t("common.currencyAr") + " " : t("common.currency") + " "}{totalPrice.toFixed(2)}
+                     </span>
                   </div>
                   
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Package className="h-4 w-4" />
-                    <span className="auto-text">
-                      {items.length} {language === "ar" ? "منتج" : items.length === 1 ? "item" : "items"}
-                    </span>
-                  </div>
+                                     <div className="flex items-center gap-2 text-sm text-gray-600">
+                     <Package className="h-4 w-4" />
+                     <span className="auto-text">
+                       {items.length} {language === "ar" ? (items.length === 1 ? t("common.itemAr") : t("common.itemsAr")) : (items.length === 1 ? t("common.item") : t("common.items"))}
+                     </span>
+                   </div>
                 </div>
 
                 {/* Action Buttons */}

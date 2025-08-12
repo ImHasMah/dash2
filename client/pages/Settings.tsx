@@ -685,7 +685,7 @@ export default function Settings() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="orderSuccessMessageEn" className="auto-text">English</Label>
+                  <Label htmlFor="orderSuccessMessageEn" className="auto-text">{t("common.language")}</Label>
                   <Textarea
                     id="orderSuccessMessageEn"
                     value={settings.orderSuccessMessageEn}
@@ -695,7 +695,7 @@ export default function Settings() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="orderSuccessMessageAr" className="auto-text">العربية</Label>
+                  <Label htmlFor="orderSuccessMessageAr" className="auto-text">{t("common.languageAr")}</Label>
                   <Textarea
                     id="orderSuccessMessageAr"
                     value={settings.orderSuccessMessageAr}
@@ -774,7 +774,7 @@ export default function Settings() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="successHeadlineEn" className="auto-text">English</Label>
+                  <Label htmlFor="successHeadlineEn" className="auto-text">{t("common.language")}</Label>
                   <Input
                     id="successHeadlineEn"
                     value={settings.successHeadlineEn || ""}
@@ -784,12 +784,12 @@ export default function Settings() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="successHeadlineAr" className="auto-text">العربية</Label>
+                  <Label htmlFor="successHeadlineAr" className="auto-text">{t("common.languageAr")}</Label>
                   <Input
                     id="successHeadlineAr"
                     value={settings.successHeadlineAr || ""}
                     onChange={(e) => handleInputChange("successHeadlineAr", e.target.value)}
-                    placeholder="تم تأكيد الطلب!"
+                    placeholder={t("orderSuccess.headlineAr")}
                     className="auto-text"
                   />
                 </div>
@@ -806,7 +806,7 @@ export default function Settings() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="successSubtextEn" className="auto-text">English</Label>
+                  <Label htmlFor="successSubtextEn" className="auto-text">{t("common.language")}</Label>
                   <Textarea
                     id="successSubtextEn"
                     value={settings.successSubtextEn || ""}
@@ -817,12 +817,12 @@ export default function Settings() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="successSubtextAr" className="auto-text">العربية</Label>
+                  <Label htmlFor="successSubtextAr" className="auto-text">{t("common.languageAr")}</Label>
                   <Textarea
                     id="successSubtextAr"
                     value={settings.successSubtextAr || ""}
                     onChange={(e) => handleInputChange("successSubtextAr", e.target.value)}
-                    placeholder="سنقوم بإبلاغك بالتحديثات عبر الهاتف حسب تقدم طلبك."
+                    placeholder={t("orderSuccess.contactPhoneAr")}
                     className="auto-text"
                     rows={3}
                   />
@@ -908,7 +908,7 @@ export default function Settings() {
                     id="pickupAddressAr"
                     value={settings.pickupAddressAr || ""}
                     onChange={(e) => handleInputChange("pickupAddressAr", e.target.value)}
-                    placeholder="منزل 1348، طريق 416، مجمع 604، سترة القرية"
+                    placeholder="Home 1348, Road 416, Block 604, Sitra Alqarya"
                     className="auto-text"
                     rows={3}
                   />

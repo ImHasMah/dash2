@@ -140,7 +140,7 @@ export default function Store() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2">
                   <Globe className="h-4 w-4" />
-                  {language === "ar" ? "العربية" : "English"}
+                  {language === "ar" ? t("common.languageAr") : t("common.language")}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

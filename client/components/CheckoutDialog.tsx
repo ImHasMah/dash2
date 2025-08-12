@@ -66,8 +66,8 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
             : settings.orderInstructionsEn,
         headline:
           language === "ar"
-            ? settings.successHeadlineAr || "تم تأكيد الطلب!"
-            : settings.successHeadlineEn || "Order Confirmed!",
+            ? settings.successHeadlineAr || t("orderSuccess.headlineAr")
+            : settings.successHeadlineEn || t("orderSuccess.headline"),
         subtext:
           language === "ar"
             ? settings.successSubtextAr || "سنقوم بإبلاغك بالتحديثات عبر الهاتف حسب تقدم طلبك."
@@ -93,7 +93,7 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
         language === "ar"
           ? "لأي تغييرات أو أسئلة حول طلبك، يرجى التواصل معنا."
           : "For any changes or questions about your order, please contact us.",
-      headline: language === "ar" ? "تم تأكيد الطلب!" : "Order Confirmed!",
+      headline: language === "ar" ? t("orderSuccess.headlineAr") : t("orderSuccess.headline"),
       subtext:
         language === "ar"
           ? "سنقوم بإبلاغك بالتحديثات عبر الهاتف حسب تقدم طلبك."
@@ -339,15 +339,15 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
                     <ul className="space-y-3 text-xs text-blue-800 auto-text">
                       <li className="flex items-start gap-3 [dir=rtl]:flex-row-reverse">
                         <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0 [dir=rtl]:order-2" />
-                        <span className="auto-text [dir=rtl]:order-1">{language === "ar" ? "سنقوم بتجهيز طلبك خلال 2-4 ساعات" : "We'll prepare your order within 2-4 hours"}</span>
+                        <span className="auto-text [dir=rtl]:order-1">{language === "ar" ? t("orderSuccess.prepareOrderAr") : t("orderSuccess.prepareOrder")}</span>
                       </li>
                       <li className="flex items-start gap-3 [dir=rtl]:flex-row-reverse">
                         <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0 [dir=rtl]:order-2" />
-                        <span className="auto-text [dir=rtl]:order-1">{language === "ar" ? "سيتم التواصل معك عبر الهاتف للتأكيد" : "We'll contact you by phone to confirm"}</span>
+                        <span className="auto-text [dir=rtl]:order-1">{language === "ar" ? t("orderSuccess.contactPhoneAr") : t("orderSuccess.contactPhone")}</span>
                       </li>
                       <li className="flex items-start gap-3 [dir=rtl]:flex-row-reverse">
                         <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0 [dir=rtl]:order-2" />
-                        <span className="auto-text [dir=rtl]:order-1">{language === "ar" ? "التوصيل خلال 1-3 أيام عمل" : "Delivery within 1-3 business days"}</span>
+                        <span className="auto-text [dir=rtl]:order-1">{language === "ar" ? t("orderSuccess.deliveryTimeAr") : t("orderSuccess.deliveryTime")}</span>
                       </li>
                     </ul>
                   </div>
@@ -859,8 +859,8 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
                         </p>
                         <p className="text-blue-600 auto-text text-sm mt-1">
                           {language === "ar" 
-                            ? "لا حاجة لبطاقة ائتمان - الدفع عند التسليم فقط!" 
-                            : "No credit card required - Pay on delivery/pickup"
+                            ? t("checkout.noCreditCard") 
+                            : t("checkout.noCreditCard")
                           }
                         </p>
                       </div>

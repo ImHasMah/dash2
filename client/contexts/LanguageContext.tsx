@@ -251,6 +251,7 @@ const translations = {
     "store.removeFromCart": "Remove from Cart",
     "store.updateQuantity": "Update Quantity",
     "store.clearCart": "Clear Cart",
+    "store.startShopping": "Start shopping to add products to your cart",
 
     // Checkout
     "checkout.title": "Checkout",
@@ -469,6 +470,28 @@ const translations = {
     "settings.chooseFile": "Choose File",
     "settings.noFileChosen": "No file chosen",
     "settings.displayOptions": "Display Options",
+    
+    // Currency and formatting
+    "common.currency": "BD",
+    "common.currencyAr": "د.ب",
+    "common.total": "Total",
+    "common.totalAr": "المجموع",
+    "common.item": "item",
+    "common.items": "items",
+    "common.itemAr": "منتج",
+    "common.itemsAr": "منتجات",
+    "common.language": "Language",
+    "common.languageAr": "العربية",
+    
+    // Order success messages
+    "orderSuccess.headline": "Order Confirmed!",
+    "orderSuccess.headlineAr": "تم تأكيد الطلب!",
+    "orderSuccess.prepareOrder": "We'll prepare your order within 2-4 hours",
+    "orderSuccess.prepareOrderAr": "سنقوم بتجهيز طلبك خلال 2-4 ساعات",
+    "orderSuccess.contactPhone": "We'll contact you by phone to confirm",
+    "orderSuccess.contactPhoneAr": "سيتم التواصل معك عبر الهاتف للتأكيد",
+    "orderSuccess.deliveryTime": "Delivery within 1-3 business days",
+    "orderSuccess.deliveryTimeAr": "التوصيل خلال 1-3 أيام عمل",
   },
   ar: {
     // Navigation
@@ -698,6 +721,7 @@ const translations = {
     "store.removeFromCart": "إزالة من السلة",
     "store.updateQuantity": "تحديث الكمية",
     "store.clearCart": "إفراغ السلة",
+    "store.startShoppingAr": "ابدأ التسوق لإضافة منتجات إلى سلتك",
 
     // Checkout
     "checkout.title": "إتمام الطلب",
@@ -918,6 +942,28 @@ const translations = {
     "settings.note": "ملاحظة",
     "settings.orderMessageNote":
       "ستظهر هذه الرسائل للعملاء عند نجح تقديم طلبهم. قم بتخصيصها لتتناسب مع طابع متجرك وتقديم المعلومات ذات الصلة.",
+    
+    // Currency and formatting
+    "common.currency": "د.ب",
+    "common.currencyAr": "د.ب",
+    "common.total": "المجموع",
+    "common.totalAr": "المجموع",
+    "common.item": "منتج",
+    "common.items": "منتجات",
+    "common.itemAr": "منتج",
+    "common.itemsAr": "منتجات",
+    "common.language": "اللغة",
+    "common.languageAr": "العربية",
+    
+    // Order success messages
+    "orderSuccess.headline": "تم تأكيد الطلب!",
+    "orderSuccess.headlineAr": "تم تأكيد الطلب!",
+    "orderSuccess.prepareOrder": "سنقوم بتجهيز طلبك خلال 2-4 ساعات",
+    "orderSuccess.prepareOrderAr": "سنقوم بتجهيز طلبك خلال 2-4 ساعات",
+    "orderSuccess.contactPhone": "سيتم التواصل معك عبر الهاتف للتأكيد",
+    "orderSuccess.contactPhoneAr": "سيتم التواصل معك عبر الهاتف للتأكيد",
+    "orderSuccess.deliveryTime": "التوصيل خلال 1-3 أيام عمل",
+    "orderSuccess.deliveryTimeAr": "التوصيل خلال 1-3 أيام عمل",
   },
 } as const;
 
