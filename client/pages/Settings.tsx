@@ -94,6 +94,10 @@ interface StoreSettings {
   displayTotals?: boolean;
   displayNextSteps?: boolean;
   displayContact?: boolean;
+
+  // UI Behavior
+  enableDialogScroll?: boolean;
+  autoScrollToSummary?: boolean;
 }
 
 export default function Settings() {
@@ -154,8 +158,6 @@ export default function Settings() {
     deliveryConcerns: 24,
     pickupOrderConfig: 48,
 
-
-
     // Success Screen Controls
     successHeadlineEn: "Order Confirmed!",
     successHeadlineAr: "تم تأكيد الطلب!",
@@ -166,6 +168,10 @@ export default function Settings() {
     displayTotals: true,
     displayNextSteps: true,
     displayContact: true,
+
+    // UI Behavior
+    enableDialogScroll: true,
+    autoScrollToSummary: true,
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -204,6 +210,8 @@ export default function Settings() {
         displayTotals: parsedSettings.displayTotals ?? true,
         displayNextSteps: parsedSettings.displayNextSteps ?? true,
         displayContact: parsedSettings.displayContact ?? true,
+        enableDialogScroll: parsedSettings.enableDialogScroll ?? true,
+        autoScrollToSummary: parsedSettings.autoScrollToSummary ?? true,
       }));
     }
   }, []);
@@ -776,298 +784,67 @@ export default function Settings() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <Label
-                htmlFor="cashOnDeliveryEnabled"
-                className="auto-text font-medium"
-              >
-                {t("settings.cashOnDelivery")}
-              </Label>
+            <div className="flex items-center justify-between">
+              <Label className="auto-text">{t("settings.cashOnDelivery")}</Label>
               <Switch
-                id="cashOnDeliveryEnabled"
                 checked={settings.cashOnDeliveryEnabled}
                 onCheckedChange={(checked) =>
                   handleInputChange("cashOnDeliveryEnabled", checked)
                 }
-                className="data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-gray-300"
               />
             </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <Label
-                htmlFor="bankTransferEnabled"
-                className="auto-text font-medium"
-              >
-                {t("settings.bankTransfer")}
-              </Label>
+            <div className="flex items-center justify-between">
+              <Label className="auto-text">{t("settings.bankTransfer")}</Label>
               <Switch
-                id="bankTransferEnabled"
                 checked={settings.bankTransferEnabled}
                 onCheckedChange={(checked) =>
                   handleInputChange("bankTransferEnabled", checked)
                 }
-                className="data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-gray-300"
               />
-            </div>
-            {settings.bankTransferEnabled && (
-              <div className="space-y-2">
-                <Label htmlFor="bankAccountInfo" className="auto-text">
-                  {t("settings.bankAccountInfo")}
-                </Label>
-                <Textarea
-                  id="bankAccountInfo"
-                  value={settings.bankAccountInfo}
-                  onChange={(e) =>
-                    handleInputChange("bankAccountInfo", e.target.value)
-                  }
-                  placeholder={t("settings.bankAccountPlaceholder")}
-                  className="auto-text min-h-[80px] touch-manipulation"
-                  rows={3}
-                />
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Operational Settings */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 [dir=rtl]:flex-row-reverse auto-text">
-              <SettingsIcon className="w-5 h-5" />
-              {t("settings.operationalSettings")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg touch-manipulation">
-                <Label
-                  htmlFor="autoOrderConfirmation"
-                  className="auto-text font-medium text-sm sm:text-base"
-                >
-                  {t("settings.autoOrderConfirmation")}
-                </Label>
-                <Switch
-                  id="autoOrderConfirmation"
-                  checked={settings.autoOrderConfirmation}
-                  onCheckedChange={(checked) =>
-                    handleInputChange("autoOrderConfirmation", checked)
-                  }
-                  className="data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-gray-300"
-                />
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="lowStockThreshold" className="auto-text">
-                    {t("settings.lowStockThreshold")}
-                  </Label>
-                  <Input
-                    id="lowStockThreshold"
-                    type="number"
-                    value={settings.lowStockThreshold}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "lowStockThreshold",
-                        parseInt(e.target.value) || 0,
-                      )
-                    }
-                    className="ltr-text h-10 touch-manipulation"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="maxOrderQuantity" className="auto-text">
-                    {t("settings.maxOrderQuantity")}
-                  </Label>
-                  <Input
-                    id="maxOrderQuantity"
-                    type="number"
-                    value={settings.maxOrderQuantity}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "maxOrderQuantity",
-                        parseInt(e.target.value) || 0,
-                      )
-                    }
-                    className="ltr-text h-10 touch-manipulation"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="deliveryConcerns" className="auto-text">
-                    {t("settings.deliveryConcerns")}
-                  </Label>
-                  <Input
-                    id="deliveryConcerns"
-                    type="number"
-                    value={settings.deliveryConcerns}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "deliveryConcerns",
-                        parseInt(e.target.value) || 0,
-                      )
-                    }
-                    className="ltr-text h-10 touch-manipulation"
-                    placeholder="24"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="pickupOrderConfig" className="auto-text">
-                    {t("settings.pickupOrderConfig")}
-                  </Label>
-                  <Input
-                    id="pickupOrderConfig"
-                    type="number"
-                    value={settings.pickupOrderConfig}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "pickupOrderConfig",
-                        parseInt(e.target.value) || 0,
-                      )
-                    }
-                    className="ltr-text h-10 touch-manipulation"
-                    placeholder="48"
-                  />
-                </div>
-              </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="orderProcessingTime" className="auto-text">
-                {t("settings.orderProcessingTime")}
+              <Label htmlFor="bankAccountInfo" className="auto-text">
+                {t("settings.bankAccountInfo")}
               </Label>
-              <Input
-                id="orderProcessingTime"
-                value={settings.orderProcessingTime}
+              <Textarea
+                id="bankAccountInfo"
+                value={settings.bankAccountInfo}
                 onChange={(e) =>
-                  handleInputChange("orderProcessingTime", e.target.value)
+                  handleInputChange("bankAccountInfo", e.target.value)
                 }
-                className="auto-text h-10 touch-manipulation"
+                placeholder={t("settings.bankAccountPlaceholder")}
+                className="auto-text min-h-[80px] touch-manipulation"
               />
             </div>
           </CardContent>
         </Card>
 
-        {/* Success Screen Controls */}
-        <Card className="lg:col-span-2">
+        {/* UI Behavior */}
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 [dir=rtl]:flex-row-reverse auto-text">
               <SettingsIcon className="w-5 h-5" />
-              {t("settings.successScreen")}
+              {t("settings.title")} – UI
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="successHeadlineEn" className="auto-text">
-                  {t("settings.successHeadline")} (EN)
-                </Label>
-                <Input
-                  id="successHeadlineEn"
-                  value={settings.successHeadlineEn}
-                  onChange={(e) =>
-                    handleInputChange("successHeadlineEn", e.target.value)
-                  }
-                  className="auto-text h-10 touch-manipulation"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="successHeadlineAr" className="auto-text">
-                  {t("settings.successHeadline")} (AR)
-                </Label>
-                <Input
-                  id="successHeadlineAr"
-                  value={settings.successHeadlineAr}
-                  onChange={(e) =>
-                    handleInputChange("successHeadlineAr", e.target.value)
-                  }
-                  className="auto-text h-10 touch-manipulation"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="successSubtextEn" className="auto-text">
-                  {t("settings.successSubtext")} (EN)
-                </Label>
-                <Input
-                  id="successSubtextEn"
-                  value={settings.successSubtextEn}
-                  onChange={(e) =>
-                    handleInputChange("successSubtextEn", e.target.value)
-                  }
-                  className="auto-text h-10 touch-manipulation"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="successSubtextAr" className="auto-text">
-                  {t("settings.successSubtext")} (AR)
-                </Label>
-                <Input
-                  id="successSubtextAr"
-                  value={settings.successSubtextAr}
-                  onChange={(e) =>
-                    handleInputChange("successSubtextAr", e.target.value)
-                  }
-                  className="auto-text h-10 touch-manipulation"
-                />
-              </div>
+            <div className="flex items-center justify-between">
+              <Label className="auto-text">Enable dialog scroll</Label>
+              <Switch
+                checked={!!settings.enableDialogScroll}
+                onCheckedChange={(checked) =>
+                  handleInputChange("enableDialogScroll", checked)
+                }
+              />
             </div>
-            <Separator />
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <Label htmlFor="displayOrderNumber" className="auto-text">
-                  {t("settings.displayOrderNumber")}
-                </Label>
-                <Switch
-                  id="displayOrderNumber"
-                  checked={!!settings.displayOrderNumber}
-                  onCheckedChange={(checked) =>
-                    handleInputChange("displayOrderNumber", checked)
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <Label htmlFor="displayOrderItems" className="auto-text">
-                  {t("settings.displayOrderItems")}
-                </Label>
-                <Switch
-                  id="displayOrderItems"
-                  checked={!!settings.displayOrderItems}
-                  onCheckedChange={(checked) =>
-                    handleInputChange("displayOrderItems", checked)
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <Label htmlFor="displayTotals" className="auto-text">
-                  {t("settings.displayTotals")}
-                </Label>
-                <Switch
-                  id="displayTotals"
-                  checked={!!settings.displayTotals}
-                  onCheckedChange={(checked) =>
-                    handleInputChange("displayTotals", checked)
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <Label htmlFor="displayNextSteps" className="auto-text">
-                  {t("settings.displayNextSteps")}
-                </Label>
-                <Switch
-                  id="displayNextSteps"
-                  checked={!!settings.displayNextSteps}
-                  onCheckedChange={(checked) =>
-                    handleInputChange("displayNextSteps", checked)
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <Label htmlFor="displayContact" className="auto-text">
-                  {t("settings.displayContact")}
-                </Label>
-                <Switch
-                  id="displayContact"
-                  checked={!!settings.displayContact}
-                  onCheckedChange={(checked) =>
-                    handleInputChange("displayContact", checked)
-                  }
-                />
-              </div>
+            <div className="flex items-center justify-between">
+              <Label className="auto-text">Auto-scroll to summary/success</Label>
+              <Switch
+                checked={!!settings.autoScrollToSummary}
+                onCheckedChange={(checked) =>
+                  handleInputChange("autoScrollToSummary", checked)
+                }
+              />
             </div>
           </CardContent>
         </Card>

@@ -41,6 +41,10 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
       ? savedSettings?.pickupAddressAr || "منزل 1348، طريق 416، مجمع 604، سترة القرية"
       : savedSettings?.pickupAddressEn || "Home 1348, Road 416, Block 604, Sitra Alqarya";
   const contactPhone: string = savedSettings?.contactPhone || "+973 36283382";
+  const enableDialogScroll: boolean =
+    savedSettings?.enableDialogScroll ?? true;
+  const autoScrollToSummary: boolean =
+    savedSettings?.autoScrollToSummary ?? true;
 
   // Get custom order messages from settings
   const getOrderMessages = () => {
@@ -121,6 +125,25 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
   const [orderTotalPrice, setOrderTotalPrice] = useState(0);
 
   const totalPrice = getTotalPrice();
+
+  // Auto-scroll helpers
+  useEffect(() => {
+    if (autoScrollToSummary && step === 3) {
+      const el = document.getElementById("checkout-summary-bottom");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "end" });
+      }
+    }
+  }, [step, autoScrollToSummary]);
+
+  useEffect(() => {
+    if (autoScrollToSummary && orderSuccess) {
+      const el = document.getElementById("checkout-success-bottom");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "end" });
+      }
+    }
+  }, [orderSuccess, autoScrollToSummary]);
 
   const handleInputChange = (field: string, value: string) => {
     setCustomerInfo((prev) => ({
@@ -276,7 +299,7 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
     return (
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent className="w-[95vw] sm:max-w-lg max-h-[90vh] p-0 rounded-lg flex flex-col dialog-content-scroll">
-          <ScrollArea className="flex-1 min-h-0 max-h-[80vh]">
+          <ScrollArea className={`flex-1 min-h-0 ${enableDialogScroll ? 'max-h-[80vh]' : ''}`}>
             <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 pb-8">
               {/* Success Icon & Title */}
               <div className="text-center space-y-3">
@@ -550,6 +573,7 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
                   {language === "ar" ? "متابعة التسوق" : "Continue Shopping"}
                 </span>
               </Button>
+              <div id="checkout-success-bottom" />
             </div>
           </ScrollArea>
         </DialogContent>
@@ -594,7 +618,7 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
         </DialogHeader>
 
         {/* Scrollable Content Area */}
-        <ScrollArea className="flex-1 min-h-0">
+        <ScrollArea className={`flex-1 min-h-0 ${enableDialogScroll ? 'max-h-[80vh]' : ''}`}>
           <div className="p-3 sm:p-6 pb-6 sm:pb-8 auto-text">
             {/* Step 1: Customer Information */}
             {step === 1 && (
@@ -972,7 +996,7 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
                 className="flex items-center gap-2 h-11 sm:h-12 px-4 sm:px-6 touch-manipulation"
                 size="sm"
               >
-                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 rtl-flip" />
                 <span className="hidden sm:inline">{t("common.back")}</span>
               </Button>
             )}
@@ -987,7 +1011,7 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
                   size="lg"
                 >
                   <span className="auto-text">{t("common.next")}</span>
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 rtl-flip" />
                 </Button>
               ) : (
                 <Button
