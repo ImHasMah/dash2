@@ -64,15 +64,17 @@ export const handleImageUpload: RequestHandler = async (req, res) => {
       // Use Supabase storage
       console.log("Using Supabase storage for image upload");
 
-      // Convert buffer to File object for Supabase
-      const file = new File([req.file.buffer], req.file.originalname, {
-        type: req.file.mimetype,
-      });
+      // Convert buffer to Blob object for Supabase
+      const fileBlob = new Blob([new Uint8Array(req.file.buffer)], { type: req.file.mimetype });
 
       // Determine folder based on request context (optional)
       const folder = req.body.folder || "products";
 
-      const result = await imageStorage.uploadImage(file, folder);
+      const result = await imageStorage.uploadImageFromBlob(
+        fileBlob,
+        req.file.originalname,
+        folder,
+      );
 
       if (!result.success) {
         console.error("Supabase upload failed:", result.error);
@@ -120,13 +122,13 @@ export const handleMultipleImageUpload: RequestHandler = async (req, res) => {
         // Use Supabase storage
         console.log("Using Supabase storage for multiple image upload");
 
-        const fileObjects = files.map(
-          (file) =>
-            new File([file.buffer], file.originalname, { type: file.mimetype }),
-        );
+        const fileObjects = files.map((file) => ({
+          blob: new Blob([new Uint8Array(file.buffer)], { type: file.mimetype }),
+          name: file.originalname,
+        }));
 
         const folder = req.body.folder || "products";
-        const results = await imageStorage.uploadMultipleImages(
+        const results = await imageStorage.uploadMultipleImagesFromBlobs(
           fileObjects,
           folder,
         );

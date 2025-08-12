@@ -457,4 +457,20 @@
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
   }
+
+  /* Scroll area improvements for mobile */
+  .radix-scroll-area[data-orientation="vertical"] .radix-scroll-area-thumb,
+  .radix-scroll-area[data-orientation="vertical"] .ScrollAreaThumb,
+  [data-radix-scroll-area-viewport]::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Ensure dialog content scroll */
+  .dialog-content-scroll .radix-viewport,
+  .dialog-content-scroll [data-radix-scroll-area-viewport] {
+    max-height: 80vh !important;
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
 }

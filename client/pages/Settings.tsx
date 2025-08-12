@@ -68,6 +68,8 @@ interface StoreSettings {
   freeDeliveryThreshold: number;
   deliveryAreas: string[];
   estimatedDeliveryTime: string;
+  pickupAddressEn?: string;
+  pickupAddressAr?: string;
 
   // Payment Settings
   cashOnDeliveryEnabled: boolean;
@@ -82,10 +84,16 @@ interface StoreSettings {
   deliveryConcerns: number;
   pickupOrderConfig: number;
 
-  // Notifications
-  emailNotifications: boolean;
-  smsNotifications: boolean;
-  adminNotifications: boolean;
+  // Success Screen Controls
+  successHeadlineEn?: string;
+  successHeadlineAr?: string;
+  successSubtextEn?: string;
+  successSubtextAr?: string;
+  displayOrderNumber?: boolean;
+  displayOrderItems?: boolean;
+  displayTotals?: boolean;
+  displayNextSteps?: boolean;
+  displayContact?: boolean;
 }
 
 export default function Settings() {
@@ -94,7 +102,7 @@ export default function Settings() {
   const [settings, setSettings] = useState<StoreSettings>({
     // Store Information
     storeName: "أزهار ستور - Azhar Store",
-    storeDescription: "متجر أزهار للأجهزة الإل��ترونية والإكسسوارات",
+    storeDescription: "متجر أزهار للأجهزة الإلكترونية والإكسسوارات",
     currency: "BHD",
     currencySymbol: "BD",
 
@@ -130,6 +138,8 @@ export default function Settings() {
     freeDeliveryThreshold: 50,
     deliveryAreas: ["المنامة", "المحرق", "سترة", "عيسى", "الرفاع"],
     estimatedDeliveryTime: "1-3 أيام عمل",
+    pickupAddressEn: "Home 1348, Road 416, Block 604, Sitra Alqarya",
+    pickupAddressAr: "منزل 1348، طريق 416، مجمع 604، سترة القرية",
 
     // Payment Settings
     cashOnDeliveryEnabled: true,
@@ -144,10 +154,18 @@ export default function Settings() {
     deliveryConcerns: 24,
     pickupOrderConfig: 48,
 
-    // Notifications
-    emailNotifications: true,
-    smsNotifications: false,
-    adminNotifications: true,
+
+
+    // Success Screen Controls
+    successHeadlineEn: "Order Confirmed!",
+    successHeadlineAr: "تم تأكيد الطلب!",
+    successSubtextEn: "We’ll share updates by phone as your order progresses.",
+    successSubtextAr: "سنقوم بإبلاغك بالتحديثات عبر الهاتف حسب تقدم طلبك.",
+    displayOrderNumber: true,
+    displayOrderItems: true,
+    displayTotals: true,
+    displayNextSteps: true,
+    displayContact: true,
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -165,6 +183,27 @@ export default function Settings() {
         // Ensure new fields have default values if missing
         deliveryConcerns: parsedSettings.deliveryConcerns ?? 24,
         pickupOrderConfig: parsedSettings.pickupOrderConfig ?? 48,
+        pickupAddressEn:
+          parsedSettings.pickupAddressEn ??
+          "Home 1348, Road 416, Block 604, Sitra Alqarya",
+        pickupAddressAr:
+          parsedSettings.pickupAddressAr ??
+          "منزل 1348، طريق 416، مجمع 604، سترة القرية",
+        successHeadlineEn:
+          parsedSettings.successHeadlineEn ?? "Order Confirmed!",
+        successHeadlineAr:
+          parsedSettings.successHeadlineAr ?? "تم تأكيد الطلب!",
+        successSubtextEn:
+          parsedSettings.successSubtextEn ??
+          "We’ll share updates by phone as your order progresses.",
+        successSubtextAr:
+          parsedSettings.successSubtextAr ??
+          "سنقوم بإبلاغك بالتحديثات عبر الهاتف حسب تقدم طلبك.",
+        displayOrderNumber: parsedSettings.displayOrderNumber ?? true,
+        displayOrderItems: parsedSettings.displayOrderItems ?? true,
+        displayTotals: parsedSettings.displayTotals ?? true,
+        displayNextSteps: parsedSettings.displayNextSteps ?? true,
+        displayContact: parsedSettings.displayContact ?? true,
       }));
     }
   }, []);
@@ -644,6 +683,36 @@ export default function Settings() {
                 className="data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-gray-300"
               />
             </div>
+            {settings.pickupEnabled && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="pickupAddressEn" className="auto-text">
+                    {t("settings.pickupAddress")} (EN)
+                  </Label>
+                  <Input
+                    id="pickupAddressEn"
+                    value={settings.pickupAddressEn}
+                    onChange={(e) =>
+                      handleInputChange("pickupAddressEn", e.target.value)
+                    }
+                    className="auto-text h-10 touch-manipulation"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pickupAddressAr" className="auto-text">
+                    {t("settings.pickupAddress")} (AR)
+                  </Label>
+                  <Input
+                    id="pickupAddressAr"
+                    value={settings.pickupAddressAr}
+                    onChange={(e) =>
+                      handleInputChange("pickupAddressAr", e.target.value)
+                    }
+                    className="auto-text h-10 touch-manipulation"
+                  />
+                </div>
+              </div>
+            )}
             <Separator />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-2">
@@ -870,6 +939,135 @@ export default function Settings() {
                 }
                 className="auto-text h-10 touch-manipulation"
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Success Screen Controls */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 [dir=rtl]:flex-row-reverse auto-text">
+              <SettingsIcon className="w-5 h-5" />
+              {t("settings.successScreen")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="successHeadlineEn" className="auto-text">
+                  {t("settings.successHeadline")} (EN)
+                </Label>
+                <Input
+                  id="successHeadlineEn"
+                  value={settings.successHeadlineEn}
+                  onChange={(e) =>
+                    handleInputChange("successHeadlineEn", e.target.value)
+                  }
+                  className="auto-text h-10 touch-manipulation"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="successHeadlineAr" className="auto-text">
+                  {t("settings.successHeadline")} (AR)
+                </Label>
+                <Input
+                  id="successHeadlineAr"
+                  value={settings.successHeadlineAr}
+                  onChange={(e) =>
+                    handleInputChange("successHeadlineAr", e.target.value)
+                  }
+                  className="auto-text h-10 touch-manipulation"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="successSubtextEn" className="auto-text">
+                  {t("settings.successSubtext")} (EN)
+                </Label>
+                <Input
+                  id="successSubtextEn"
+                  value={settings.successSubtextEn}
+                  onChange={(e) =>
+                    handleInputChange("successSubtextEn", e.target.value)
+                  }
+                  className="auto-text h-10 touch-manipulation"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="successSubtextAr" className="auto-text">
+                  {t("settings.successSubtext")} (AR)
+                </Label>
+                <Input
+                  id="successSubtextAr"
+                  value={settings.successSubtextAr}
+                  onChange={(e) =>
+                    handleInputChange("successSubtextAr", e.target.value)
+                  }
+                  className="auto-text h-10 touch-manipulation"
+                />
+              </div>
+            </div>
+            <Separator />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <Label htmlFor="displayOrderNumber" className="auto-text">
+                  {t("settings.displayOrderNumber")}
+                </Label>
+                <Switch
+                  id="displayOrderNumber"
+                  checked={!!settings.displayOrderNumber}
+                  onCheckedChange={(checked) =>
+                    handleInputChange("displayOrderNumber", checked)
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <Label htmlFor="displayOrderItems" className="auto-text">
+                  {t("settings.displayOrderItems")}
+                </Label>
+                <Switch
+                  id="displayOrderItems"
+                  checked={!!settings.displayOrderItems}
+                  onCheckedChange={(checked) =>
+                    handleInputChange("displayOrderItems", checked)
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <Label htmlFor="displayTotals" className="auto-text">
+                  {t("settings.displayTotals")}
+                </Label>
+                <Switch
+                  id="displayTotals"
+                  checked={!!settings.displayTotals}
+                  onCheckedChange={(checked) =>
+                    handleInputChange("displayTotals", checked)
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <Label htmlFor="displayNextSteps" className="auto-text">
+                  {t("settings.displayNextSteps")}
+                </Label>
+                <Switch
+                  id="displayNextSteps"
+                  checked={!!settings.displayNextSteps}
+                  onCheckedChange={(checked) =>
+                    handleInputChange("displayNextSteps", checked)
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <Label htmlFor="displayContact" className="auto-text">
+                  {t("settings.displayContact")}
+                </Label>
+                <Switch
+                  id="displayContact"
+                  checked={!!settings.displayContact}
+                  onCheckedChange={(checked) =>
+                    handleInputChange("displayContact", checked)
+                  }
+                />
+              </div>
             </div>
           </CardContent>
         </Card>

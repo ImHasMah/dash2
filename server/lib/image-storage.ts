@@ -110,6 +110,69 @@ export const imageStorage = {
   },
 
   /**
+   * Upload an image from a Blob (Node/Express) with an original filename
+   */
+  async uploadImageFromBlob(
+    blob: Blob,
+    originalName: string,
+    folder?: string,
+  ): Promise<ImageUploadResult> {
+    // Supabase client accepts Blob or File; but we need a name to generate unique filename
+    // Create a File-like using Web File if available, otherwise pass Blob and use originalName for extension
+    const extension = originalName.split(".").pop() || "jpg";
+    const fileName = generateFileName(originalName);
+    const filePath = folder ? `${folder}/${fileName}` : fileName;
+
+    if (!supabase) {
+      return {
+        success: false,
+        error: "Supabase not configured. Image upload not available.",
+      };
+    }
+
+    try {
+      const { error } = await supabase.storage
+        .from(STORAGE_BUCKET)
+        .upload(filePath, blob, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: (blob as any).type || `image/${extension}`,
+        });
+
+      if (error) {
+        return { success: false, error: `Upload failed: ${error.message}` };
+      }
+
+      const { data: urlData } = supabase.storage
+        .from(STORAGE_BUCKET)
+        .getPublicUrl(filePath);
+
+      return { success: true, url: urlData.publicUrl, fileName: filePath };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown upload error",
+      };
+    }
+  },
+
+  /**
+   * Upload multiple images from Blobs
+   */
+  async uploadMultipleImagesFromBlobs(
+    files: { blob: Blob; name: string }[],
+    folder?: string,
+  ): Promise<ImageUploadResult[]> {
+    const results: ImageUploadResult[] = [];
+    for (const f of files) {
+      // eslint-disable-next-line no-await-in-loop
+      const res = await this.uploadImageFromBlob(f.blob, f.name, folder);
+      results.push(res);
+    }
+    return results;
+  },
+
+  /**
    * Upload multiple images to Supabase storage
    * @param files - Array of image files to upload
    * @param folder - Optional folder path

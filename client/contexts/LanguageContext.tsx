@@ -406,6 +406,15 @@ const translations = {
     "settings.orderProcessingTime": "Order Processing Time",
     "settings.deliveryConcerns": "Delivery Concerns (hours)",
     "settings.pickupOrderConfig": "Pickup Order Config (hours)",
+    "settings.pickupAddress": "Pickup Address",
+    "settings.successScreen": "Success Screen",
+    "settings.successHeadline": "Success Headline",
+    "settings.successSubtext": "Success Subtext",
+    "settings.displayOrderNumber": "Display Order Number",
+    "settings.displayOrderItems": "Display Order Items",
+    "settings.displayTotals": "Display Totals",
+    "settings.displayNextSteps": "Display Next Steps",
+    "settings.displayContact": "Display Contact Info",
 
     // Order Messages
     "settings.orderMessages": "Order Messages",
@@ -426,7 +435,7 @@ const translations = {
     "nav.revenue": "الإيرادات",
     "nav.analytics": "التحليلات",
     "nav.categories": "التصنيفات",
-    "nav.settings": "الإعدا��ات",
+    "nav.settings": "الإعدادات",
     "nav.logout": "تسجيل الخروج",
     "nav.adminPanel": "لوحة الإدارة",
 
@@ -662,7 +671,7 @@ const translations = {
     "checkout.orderSummary": "ملخص الطلب",
     "checkout.placeOrder": "تأكيد الطلب",
     "checkout.noCreditCard":
-      "لا تحتاج بطاقة ائتمان - ادفع عند التسليم/الاستل��م",
+      "لا تحتاج بطاقة ائتمان - ادفع عند التسليم/الاستلام",
     "checkout.orderSuccess": "تم تأكيد الطلب بنجاح!",
     "checkout.thankYou": "شكراً لك على طلبك",
     "checkout.orderNumber": "رقم الطلب",
@@ -798,6 +807,15 @@ const translations = {
     "settings.orderProcessingTime": "وقت معالجة الطلب",
     "settings.deliveryConcerns": "مخاوف التوصيل (ساعات)",
     "settings.pickupOrderConfig": "إعداد طلب الاستلام (ساعات)",
+    "settings.pickupAddress": "عنوان الاستلام",
+    "settings.successScreen": "شاشة نجاح الطلب",
+    "settings.successHeadline": "عنوان النجاح",
+    "settings.successSubtext": "نص توضيحي للنجاح",
+    "settings.displayOrderNumber": "عرض رقم الطلب",
+    "settings.displayOrderItems": "عرض عناصر الطلب",
+    "settings.displayTotals": "عرض الإجماليات",
+    "settings.displayNextSteps": "عرض الخطوات التالية",
+    "settings.displayContact": "عرض معلومات التواصل",
 
     // Order Messages
     "settings.orderMessages": "رسائل الطلبات",
