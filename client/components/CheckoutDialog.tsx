@@ -338,16 +338,16 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
                     </h3>
                     <ul className="space-y-3 text-xs text-blue-800 auto-text">
                       <li className="flex items-start gap-3 [dir=rtl]:flex-row-reverse">
-                        <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                        <span>{language === "ar" ? "سنقوم بتجهيز طلبك خلال 2-4 ساعات" : "We'll prepare your order within 2-4 hours"}</span>
+                        <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0 [dir=rtl]:order-2" />
+                        <span className="auto-text [dir=rtl]:order-1">{language === "ar" ? "سنقوم بتجهيز طلبك خلال 2-4 ساعات" : "We'll prepare your order within 2-4 hours"}</span>
                       </li>
                       <li className="flex items-start gap-3 [dir=rtl]:flex-row-reverse">
-                        <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                        <span>{language === "ar" ? "سيتم التواصل معك عبر الهاتف للتأكيد" : "We'll contact you by phone to confirm"}</span>
+                        <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0 [dir=rtl]:order-2" />
+                        <span className="auto-text [dir=rtl]:order-1">{language === "ar" ? "سيتم التواصل معك عبر الهاتف للتأكيد" : "We'll contact you by phone to confirm"}</span>
                       </li>
                       <li className="flex items-start gap-3 [dir=rtl]:flex-row-reverse">
-                        <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                        <span>{language === "ar" ? "التوصيل خلال 1-3 أيام عمل" : "Delivery within 1-3 business days"}</span>
+                        <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0 [dir=rtl]:order-2" />
+                        <span className="auto-text [dir=rtl]:order-1">{language === "ar" ? "التوصيل خلال 1-3 أيام عمل" : "Delivery within 1-3 business days"}</span>
                       </li>
                     </ul>
                   </div>
@@ -362,12 +362,12 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
                     </h3>
                     <div className="space-y-3 text-xs text-gray-700">
                       <div className="flex items-center gap-3 [dir=rtl]:flex-row-reverse">
-                        <Phone className="w-4 h-4 text-gray-500" />
-                        <span className="ltr-text font-medium">{contactPhone}</span>
+                        <Phone className="w-4 h-4 text-gray-500 [dir=rtl]:order-2" />
+                        <span className="ltr-text font-medium [dir=rtl]:order-1">{contactPhone}</span>
                       </div>
                       <div className="flex items-start gap-3 [dir=rtl]:flex-row-reverse">
-                        <MapPin className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
-                        <span className="auto-text leading-relaxed">{pickupAddress}</span>
+                        <MapPin className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0 [dir=rtl]:order-2" />
+                        <span className="auto-text leading-relaxed [dir=rtl]:order-1">{pickupAddress}</span>
                       </div>
                     </div>
                   </div>
@@ -812,48 +812,56 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
 
                   <Separator />
 
-                  {/* Total Calculation */}
-                  <div className="space-y-4 bg-gray-50 p-4 sm:p-5 rounded-lg">
+                  {/* Total Calculation - Enhanced Design */}
+                  <div className="space-y-4 bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200 shadow-sm">
                     <div className="flex justify-between [dir=rtl]:flex-row-reverse items-center">
-                      <span className="auto-text text-gray-600 text-sm sm:text-base">
+                      <span className="auto-text text-gray-700 text-base font-medium">
                         {t("checkout.subtotal")}:
                       </span>
-                      <span className="ltr-text font-medium text-sm sm:text-base">
+                      <span className="ltr-text font-semibold text-base">
                         {currencySymbol} {totalPrice.toFixed(2)}
                       </span>
                     </div>
                     <div className="flex justify-between [dir=rtl]:flex-row-reverse items-center">
-                      <span className="auto-text text-gray-600 text-sm sm:text-base">
+                      <span className="auto-text text-gray-700 text-base font-medium">
                         {t("checkout.deliveryFee")}:
                       </span>
-                      <span className="ltr-text font-medium text-sm sm:text-base">
+                      <span className="ltr-text font-semibold text-base">
                         {deliveryType === "delivery"
                           ? `${currencySymbol} ${deliveryFeeSetting.toFixed(2)}`
                           : `${currencySymbol} 0.00`}
                       </span>
                     </div>
-                    <Separator className="my-3 sm:my-4" />
-                    <div className="flex justify-between [dir=rtl]:flex-row-reverse items-center pt-2">
-                      <span className="text-lg sm:text-xl font-bold auto-text">
+                    <Separator className="my-4" />
+                    <div className="flex justify-between [dir=rtl]:flex-row-reverse items-center pt-3">
+                      <span className="text-xl font-bold auto-text text-gray-900">
                         {t("checkout.total")}:
                       </span>
-                      <span className="text-xl sm:text-2xl font-bold text-primary ltr-text">
+                      <span className="text-2xl font-bold text-primary ltr-text">
                         {currencySymbol}{" "}
                         {(totalPrice + (deliveryType === "delivery" ? deliveryFeeSetting : 0)).toFixed(2)}
                       </span>
                     </div>
                   </div>
 
-                  {/* Payment Method - Always Visible */}
-                  <div className="p-4 sm:p-5 bg-blue-50 rounded-lg border border-blue-200 mb-4 sticky bottom-0 z-10">
+                  {/* Payment Method - Enhanced Design */}
+                  <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-sm">
                     <div className="flex items-center gap-4 [dir=rtl]:flex-row-reverse">
-                      <CreditCard className="w-6 h-6 text-blue-600 [dir=rtl]:order-2 flex-shrink-0" />
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center [dir=rtl]:order-2 flex-shrink-0">
+                        <CreditCard className="w-6 h-6 text-blue-600" />
+                      </div>
                       <div className="[dir=rtl]:order-1 flex-1">
-                        <p className="font-medium text-blue-900 auto-text text-base sm:text-lg">
+                        <h3 className="font-semibold text-blue-900 auto-text text-lg mb-1">
                           {t("checkout.paymentMethod")}
-                        </p>
-                        <p className="text-sm sm:text-base text-blue-700 auto-text">
+                        </h3>
+                        <p className="text-blue-700 auto-text text-base">
                           {t("checkout.cashOnDelivery")}
+                        </p>
+                        <p className="text-blue-600 auto-text text-sm mt-1">
+                          {language === "ar" 
+                            ? "لا حاجة لبطاقة ائتمان - الدفع عند التسليم فقط!" 
+                            : "No credit card required - Pay on delivery/pickup"
+                          }
                         </p>
                       </div>
                     </div>

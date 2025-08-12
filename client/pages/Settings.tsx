@@ -297,7 +297,8 @@ export default function Settings() {
     { id: "delivery", label: t("settings.deliverySettings"), icon: Truck },
     { id: "payment", label: t("settings.paymentSettings"), icon: CreditCard },
     { id: "messages", label: t("settings.messageSettings"), icon: MessageSquare },
-         { id: "advanced", label: t("settings.advancedSettings"), icon: Zap },
+    { id: "success", label: t("settings.successScreenSettings"), icon: CheckCircle },
+    { id: "advanced", label: t("settings.advancedSettings"), icon: Zap },
     { id: "admin", label: t("settings.adminSettings"), icon: Shield },
   ];
 
@@ -330,19 +331,28 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* Import/Export Section */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4 items-center">
-            <div className="flex items-center gap-2">
-              <Info className="w-5 h-5 text-blue-600" />
-                             <span className="auto-text text-sm font-medium">{t("checkout.backupRestore")}</span>
+      {/* Backup & Restore Section */}
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-sm">
+        <CardContent className="p-6">
+          <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <Info className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-blue-900 auto-text">{t("settings.exportSettings")}</h3>
+                <p className="text-blue-700 auto-text text-sm">{t("settings.exportDescription")}</p>
+              </div>
             </div>
-            <div className="flex gap-2">
-                             <Button variant="outline" size="sm" onClick={exportSettings} className="flex items-center gap-2">
-                 <Download className="w-4 h-4" />
-                 {t("checkout.export")}
-               </Button>
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                onClick={exportSettings} 
+                className="flex items-center gap-2 bg-white hover:bg-blue-50 border-blue-300"
+              >
+                <Download className="w-4 h-4" />
+                {t("settings.exportSettings")}
+              </Button>
               <div className="relative">
                 <input
                   type="file"
@@ -350,10 +360,13 @@ export default function Settings() {
                   onChange={importSettings}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                                 <Button variant="outline" size="sm" className="flex items-center gap-2">
-                   <Upload className="w-4 h-4" />
-                   {t("checkout.import")}
-                 </Button>
+                <Button 
+                  variant="outline" 
+                  className="flex items-center gap-2 bg-white hover:bg-blue-50 border-blue-300"
+                >
+                  <Upload className="w-4 h-4" />
+                  {t("settings.importSettings")}
+                </Button>
               </div>
             </div>
           </div>
@@ -361,7 +374,7 @@ export default function Settings() {
       </Card>
 
       {/* Tab Navigation */}
-      <div className="flex flex-wrap gap-2 border-b">
+      <div className="flex flex-wrap gap-2 border-b pb-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
@@ -369,10 +382,14 @@ export default function Settings() {
               key={tab.id}
               variant={activeTab === tab.id ? "default" : "ghost"}
               onClick={() => setActiveTab(tab.id)}
-              className="flex items-center gap-2 text-sm"
+              className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-all duration-200 ${
+                activeTab === tab.id 
+                  ? "bg-primary text-white shadow-md" 
+                  : "hover:bg-gray-100 text-gray-600"
+              }`}
             >
               <Icon className="w-4 h-4" />
-              {tab.label}
+              <span className="auto-text">{tab.label}</span>
             </Button>
           );
         })}
@@ -744,6 +761,163 @@ export default function Settings() {
           </div>
         )}
 
+        {/* Success Screen Settings */}
+        {activeTab === "success" && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Success Headlines */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5" />
+                  {t("settings.successHeadline")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="successHeadlineEn" className="auto-text">English</Label>
+                  <Input
+                    id="successHeadlineEn"
+                    value={settings.successHeadlineEn || ""}
+                    onChange={(e) => handleInputChange("successHeadlineEn", e.target.value)}
+                    placeholder="Order Confirmed!"
+                    className="auto-text"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="successHeadlineAr" className="auto-text">العربية</Label>
+                  <Input
+                    id="successHeadlineAr"
+                    value={settings.successHeadlineAr || ""}
+                    onChange={(e) => handleInputChange("successHeadlineAr", e.target.value)}
+                    placeholder="تم تأكيد الطلب!"
+                    className="auto-text"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Success Subtext */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  {t("settings.successSubtext")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="successSubtextEn" className="auto-text">English</Label>
+                  <Textarea
+                    id="successSubtextEn"
+                    value={settings.successSubtextEn || ""}
+                    onChange={(e) => handleInputChange("successSubtextEn", e.target.value)}
+                    placeholder="We'll share updates by phone as your order progresses."
+                    className="auto-text"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="successSubtextAr" className="auto-text">العربية</Label>
+                  <Textarea
+                    id="successSubtextAr"
+                    value={settings.successSubtextAr || ""}
+                    onChange={(e) => handleInputChange("successSubtextAr", e.target.value)}
+                    placeholder="سنقوم بإبلاغك بالتحديثات عبر الهاتف حسب تقدم طلبك."
+                    className="auto-text"
+                    rows={3}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Display Controls */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Palette className="w-5 h-5" />
+                  {t("settings.displayOptions")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="displayOrderNumber" className="auto-text">{t("settings.displayOrderNumber")}</Label>
+                  <Switch
+                    id="displayOrderNumber"
+                    checked={settings.displayOrderNumber}
+                    onCheckedChange={(checked) => handleInputChange("displayOrderNumber", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="displayOrderItems" className="auto-text">{t("settings.displayOrderItems")}</Label>
+                  <Switch
+                    id="displayOrderItems"
+                    checked={settings.displayOrderItems}
+                    onCheckedChange={(checked) => handleInputChange("displayOrderItems", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="displayTotals" className="auto-text">{t("settings.displayTotals")}</Label>
+                  <Switch
+                    id="displayTotals"
+                    checked={settings.displayTotals}
+                    onCheckedChange={(checked) => handleInputChange("displayTotals", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="displayNextSteps" className="auto-text">{t("settings.displayNextSteps")}</Label>
+                  <Switch
+                    id="displayNextSteps"
+                    checked={settings.displayNextSteps}
+                    onCheckedChange={(checked) => handleInputChange("displayNextSteps", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="displayContact" className="auto-text">{t("settings.displayContact")}</Label>
+                  <Switch
+                    id="displayContact"
+                    checked={settings.displayContact}
+                    onCheckedChange={(checked) => handleInputChange("displayContact", checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Pickup Address */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5" />
+                  {t("settings.pickupAddress")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="pickupAddressEn" className="auto-text">{t("settings.pickupAddressEn")}</Label>
+                  <Textarea
+                    id="pickupAddressEn"
+                    value={settings.pickupAddressEn || ""}
+                    onChange={(e) => handleInputChange("pickupAddressEn", e.target.value)}
+                    placeholder="Home 1348, Road 416, Block 604, Sitra Alqarya"
+                    className="auto-text"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="pickupAddressAr" className="auto-text">{t("settings.pickupAddressAr")}</Label>
+                  <Textarea
+                    id="pickupAddressAr"
+                    value={settings.pickupAddressAr || ""}
+                    onChange={(e) => handleInputChange("pickupAddressAr", e.target.value)}
+                    placeholder="منزل 1348، طريق 416، مجمع 604، سترة القرية"
+                    className="auto-text"
+                    rows={3}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Advanced Settings */}
         {activeTab === "advanced" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -863,7 +1037,10 @@ export default function Settings() {
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="enableDialogScroll" className="auto-text">Dialog Scroll</Label>
+                  <div>
+                    <Label htmlFor="enableDialogScroll" className="auto-text">{t("settings.dialogScroll")}</Label>
+                    <p className="text-sm text-gray-600 auto-text">Enable scrolling in checkout dialogs</p>
+                  </div>
                   <Switch
                     id="enableDialogScroll"
                     checked={settings.enableDialogScroll}
@@ -871,7 +1048,10 @@ export default function Settings() {
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="autoScrollToSummary" className="auto-text">Auto Scroll to Summary</Label>
+                  <div>
+                    <Label htmlFor="autoScrollToSummary" className="auto-text">{t("settings.autoScrollToSummary")}</Label>
+                    <p className="text-sm text-gray-600 auto-text">Automatically scroll to order summary in checkout</p>
+                  </div>
                   <Switch
                     id="autoScrollToSummary"
                     checked={settings.autoScrollToSummary}
@@ -891,7 +1071,10 @@ export default function Settings() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="autoOrderConfirmation" className="auto-text">Auto Order Confirmation</Label>
+                  <div>
+                    <Label htmlFor="autoOrderConfirmation" className="auto-text">{t("settings.autoOrderConfirmation")}</Label>
+                    <p className="text-sm text-gray-600 auto-text">Automatically confirm orders when placed</p>
+                  </div>
                   <Switch
                     id="autoOrderConfirmation"
                     checked={settings.autoOrderConfirmation}
@@ -899,33 +1082,39 @@ export default function Settings() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="lowStockThreshold" className="auto-text">Low Stock Threshold</Label>
+                  <Label htmlFor="lowStockThreshold" className="auto-text">{t("settings.lowStockThreshold")}</Label>
                   <Input
                     id="lowStockThreshold"
                     type="number"
                     value={settings.lowStockThreshold}
                     onChange={(e) => handleInputChange("lowStockThreshold", parseInt(e.target.value))}
                     className="ltr-text"
+                    placeholder="5"
                   />
+                  <p className="text-sm text-gray-600 auto-text mt-1">Show low stock warning when quantity falls below this number</p>
                 </div>
                 <div>
-                  <Label htmlFor="maxOrderQuantity" className="auto-text">Max Order Quantity</Label>
+                  <Label htmlFor="maxOrderQuantity" className="auto-text">{t("settings.maxOrderQuantity")}</Label>
                   <Input
                     id="maxOrderQuantity"
                     type="number"
                     value={settings.maxOrderQuantity}
                     onChange={(e) => handleInputChange("maxOrderQuantity", parseInt(e.target.value))}
                     className="ltr-text"
+                    placeholder="10"
                   />
+                  <p className="text-sm text-gray-600 auto-text mt-1">Maximum quantity a customer can order per item</p>
                 </div>
                 <div>
-                  <Label htmlFor="orderProcessingTime" className="auto-text">Order Processing Time</Label>
+                  <Label htmlFor="orderProcessingTime" className="auto-text">{t("settings.orderProcessingTime")}</Label>
                   <Input
                     id="orderProcessingTime"
                     value={settings.orderProcessingTime}
                     onChange={(e) => handleInputChange("orderProcessingTime", e.target.value)}
                     className="auto-text"
+                    placeholder="2-4 hours"
                   />
+                  <p className="text-sm text-gray-600 auto-text mt-1">Estimated time to process orders</p>
                 </div>
               </CardContent>
             </Card>

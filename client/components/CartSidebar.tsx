@@ -12,8 +12,9 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Package, Truck } from "lucide-react";
 import CheckoutDialog from "./CheckoutDialog";
+import { Badge } from "./ui/badge";
 
 interface CartSidebarProps {
   open: boolean;
@@ -21,7 +22,7 @@ interface CartSidebarProps {
 }
 
 export default function CartSidebar({ open, onClose }: CartSidebarProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { items, updateQuantity, removeItem, getTotalPrice, clearCart } =
     useCart();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -47,22 +48,43 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
   return (
     <>
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="w-[95vw] sm:max-w-lg max-h-[95vh] flex flex-col p-0 rounded-lg sm:rounded-md">
-          <DialogHeader className="px-6 py-4 border-b">
-            <DialogTitle className="flex items-center gap-2 text-xl">
-              <ShoppingBag className="h-6 w-6" />
-              {t("store.cart")}
+        <DialogContent className="w-[95vw] sm:max-w-lg max-h-[95vh] flex flex-col p-0 rounded-xl sm:rounded-xl border-0 shadow-2xl">
+          <DialogHeader className="px-6 py-6 border-b bg-gradient-to-r from-primary/5 to-primary/10">
+            <DialogTitle className="flex items-center gap-3 text-xl font-bold text-gray-800">
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                <ShoppingBag className="h-5 w-5 text-white" />
+              </div>
+              <span className="auto-text">{t("store.cart")}</span>
+              {items.length > 0 && (
+                <Badge variant="secondary" className="ml-auto bg-primary text-white">
+                  {items.length}
+                </Badge>
+              )}
             </DialogTitle>
           </DialogHeader>
 
           {items.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center py-12">
-              <div className="text-center space-y-4">
-                <ShoppingBag className="h-16 w-16 mx-auto text-muted-foreground" />
-                <p className="text-muted-foreground text-lg">
-                  {t("store.cartEmpty")}
-                </p>
-                <Button variant="outline" onClick={onClose}>
+            <div className="flex-1 flex items-center justify-center py-16 px-6">
+              <div className="text-center space-y-6">
+                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
+                  <ShoppingBag className="h-12 w-12 text-gray-400" />
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-xl font-semibold text-gray-700 auto-text">
+                    {t("store.cartEmpty")}
+                  </h3>
+                  <p className="text-gray-500 auto-text text-sm">
+                    {language === "ar" 
+                      ? "ابدأ التسوق لإضافة منتجات إلى سلتك" 
+                      : "Start shopping to add products to your cart"
+                    }
+                  </p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  onClick={onClose}
+                  className="px-8 py-3 h-auto"
+                >
                   {t("store.continueShopping")}
                 </Button>
               </div>
@@ -70,16 +92,16 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
           ) : (
             <>
               <ScrollArea className="flex-1 px-6">
-                <div className="space-y-4 py-4">
+                <div className="space-y-6 py-6">
                   {items.map((item) => (
                     <div
                       key={`${item.productId}-${item.variantId}`}
-                      className="space-y-3 pb-4 border-b last:border-b-0"
+                      className="group relative bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-all duration-200"
                     >
                       <div className="flex gap-4">
                         {/* Product Image */}
                         {item.productImage && (
-                          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-gray-100 shrink-0">
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
                             <img
                               src={item.productImage}
                               alt={item.productName}
@@ -89,82 +111,95 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
                         )}
 
                         {/* Product Details */}
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-sm sm:text-base truncate">
-                            {item.productName}
-                          </h4>
-                          <p className="text-xs sm:text-sm text-muted-foreground">
-                            {item.variantName}
-                          </p>
-                          <p className="text-base sm:text-lg font-bold text-primary">
-                            BD {item.price.toFixed(2)}
-                          </p>
-                        </div>
+                        <div className="flex-1 min-w-0 space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-base sm:text-lg text-gray-900 truncate leading-tight">
+                                {item.productName}
+                              </h4>
+                              {item.variantName && (
+                                <p className="text-sm text-gray-600 mt-1">
+                                  {item.variantName}
+                                </p>
+                              )}
+                            </div>
+                            
+                            {/* Remove Button */}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                removeItem(item.productId, item.variantId)
+                              }
+                              className="shrink-0 h-8 w-8 p-0 text-gray-400 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all duration-200"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
 
-                        {/* Remove Button */}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() =>
-                            removeItem(item.productId, item.variantId)
-                          }
-                          className="shrink-0 h-9 w-9 p-0 text-muted-foreground hover:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+                          {/* Price and Quantity Controls */}
+                          <div className="flex items-center justify-between">
+                            <div className="text-lg font-bold text-primary">
+                              {language === "ar" ? "د.ب " : "BD "}{item.price.toFixed(2)}
+                            </div>
+                            
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    item.productId,
+                                    item.variantId,
+                                    item.quantity - 1,
+                                  )
+                                }
+                                className="h-8 w-8 p-0 border-gray-300 hover:border-primary hover:bg-primary/5"
+                              >
+                                <Minus className="h-3 w-3" />
+                              </Button>
 
-                      {/* Quantity Controls */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              handleQuantityChange(
-                                item.productId,
-                                item.variantId,
-                                item.quantity - 1,
-                              )
-                            }
-                            className="h-8 w-8 p-0"
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
+                              <Input
+                                type="number"
+                                value={item.quantity}
+                                onChange={(e) =>
+                                  handleQuantityChange(
+                                    item.productId,
+                                    item.variantId,
+                                    parseInt(e.target.value) || 1,
+                                  )
+                                }
+                                min={1}
+                                max={50}
+                                className="w-16 h-8 text-center text-sm border-gray-300 focus:border-primary"
+                              />
 
-                          <Input
-                            type="number"
-                            value={item.quantity}
-                            onChange={(e) =>
-                              handleQuantityChange(
-                                item.productId,
-                                item.variantId,
-                                parseInt(e.target.value) || 1,
-                              )
-                            }
-                            min={1}
-                            max={50}
-                            className="w-16 sm:w-20 h-8 text-center text-sm"
-                          />
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    item.productId,
+                                    item.variantId,
+                                    item.quantity + 1,
+                                  )
+                                }
+                                className="h-8 w-8 p-0 border-gray-300 hover:border-primary hover:bg-primary/5"
+                              >
+                                <Plus className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
 
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              handleQuantityChange(
-                                item.productId,
-                                item.variantId,
-                                item.quantity + 1,
-                              )
-                            }
-                            className="h-8 w-8 p-0"
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </div>
-
-                        <div className="text-base sm:text-lg font-bold">
-                          BD {(item.price * item.quantity).toFixed(2)}
+                          {/* Item Total */}
+                          <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                            <span className="text-sm text-gray-600 auto-text">
+                              {language === "ar" ? "المجموع" : "Total"}:
+                            </span>
+                            <span className="text-lg font-bold text-gray-900">
+                              {language === "ar" ? "د.ب " : "BD "}{(item.price * item.quantity).toFixed(2)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -172,13 +207,22 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
                 </div>
               </ScrollArea>
 
-              <DialogFooter className="flex-col space-y-4 px-4 sm:px-6 py-4 border-t">
-                {/* Total */}
-                <div className="flex justify-between items-center text-lg sm:text-xl font-bold w-full">
-                  <span>{t("store.cartTotal")}:</span>
-                  <span className="text-primary">
-                    BD {totalPrice.toFixed(2)}
-                  </span>
+              <DialogFooter className="flex-col space-y-4 px-6 py-6 border-t bg-gray-50">
+                {/* Summary */}
+                <div className="w-full space-y-3">
+                  <div className="flex justify-between items-center text-lg font-semibold">
+                    <span className="auto-text text-gray-700">{t("store.cartTotal")}:</span>
+                    <span className="text-2xl font-bold text-primary">
+                      {language === "ar" ? "د.ب " : "BD "}{totalPrice.toFixed(2)}
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Package className="h-4 w-4" />
+                    <span className="auto-text">
+                      {items.length} {language === "ar" ? "منتج" : items.length === 1 ? "item" : "items"}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Action Buttons */}
@@ -186,17 +230,18 @@ export default function CartSidebar({ open, onClose }: CartSidebarProps) {
                   <Button
                     variant="outline"
                     onClick={clearCart}
-                    className="flex-1 h-12 touch-manipulation"
+                    className="flex-1 h-12 touch-manipulation border-gray-300 hover:border-red-300 hover:bg-red-50 hover:text-red-600"
                     disabled={items.length === 0}
                   >
                     {t("store.clearCart")}
                   </Button>
                   <Button
                     onClick={handleCheckout}
-                    className="flex-1 h-12 touch-manipulation"
+                    className="flex-1 h-12 touch-manipulation bg-primary hover:bg-primary/90 shadow-lg"
                     disabled={items.length === 0}
                     size="lg"
                   >
+                    <Truck className="h-4 w-4 mr-2" />
                     {t("store.checkout")}
                   </Button>
                 </div>
