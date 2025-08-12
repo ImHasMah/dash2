@@ -19,6 +19,8 @@ import {
   Package,
   ArrowLeft,
   ArrowRight,
+  Phone,
+  MapPin,
 } from "lucide-react";
 import { useEffect } from "react";
 
@@ -287,295 +289,163 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
     setOrderTotalPrice(0);
   };
 
-  // Success State
+  // Order Success Screen
   if (orderSuccess) {
-    const phoneEl = (
-      <a href={`tel:${contactPhone}`} className="font-bold text-primary hover:underline">
-        {contactPhone}
-      </a>
-    );
-    const messages = getOrderMessages();
-
+    const orderMessages = getOrderMessages();
+    
     return (
-      <Dialog open={open} onOpenChange={handleClose}>
-        <DialogContent className="w-[95vw] sm:max-w-lg max-h-[90vh] p-0 rounded-lg flex flex-col dialog-content-scroll">
-          <ScrollArea className={`flex-1 min-h-0 ${enableDialogScroll ? 'max-h-[80vh]' : ''}`}>
-            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 pb-8">
-              {/* Success Icon & Title */}
-              <div className="text-center space-y-3">
-                <div className="flex justify-center">
-                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                    <Check className="w-10 h-10 text-green-600" />
-                  </div>
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className="max-w-md w-full mx-4 p-0 overflow-hidden">
+          <div className="flex flex-col h-full max-h-[90vh]">
+            {/* Header */}
+            <DialogHeader className="p-6 pb-4 border-b bg-green-50">
+              <div className="flex items-center justify-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                  <Check className="h-8 w-8 text-green-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-green-600 auto-text">
-                  {messages.headline}
-                </h2>
-                {messages.subtext && (
-                  <p className="text-sm text-gray-600 auto-text">{messages.subtext}</p>
-                )}
               </div>
+              <DialogTitle className="text-center text-xl font-bold text-green-800 auto-text">
+                {orderMessages.headline}
+              </DialogTitle>
+            </DialogHeader>
 
-              {/* Order Number */}
-              {messages.toggles.displayOrderNumber && (
-                <div className="bg-gray-50 p-4 rounded-lg text-center">
-                  <p className="text-sm text-gray-600 mb-2 auto-text">
-                    {language === "ar" ? "رقم الطلب" : "Order Number"}
+            {/* Scrollable Content */}
+            <ScrollArea className="flex-1 p-6">
+              <div className="space-y-6">
+                {/* Success Message - First Priority */}
+                <div className="text-center space-y-3">
+                  <p className="text-gray-700 auto-text text-sm leading-relaxed">
+                    {orderMessages.successMessage}
                   </p>
-                  <Badge variant="outline" className="text-xl px-4 py-2 font-mono">
-                    #{orderNumber}
-                  </Badge>
+                  <p className="text-gray-600 auto-text text-xs">
+                    {orderMessages.instructions}
+                  </p>
                 </div>
-              )}
 
-              {/* Order Summary */}
-              {messages.toggles.displayTotals && (
-                <div className="border-t pt-4">
-                  <h3 className="font-semibold mb-3 auto-text">
-                    {language === "ar" ? "تفاصيل الطلب" : "Order Details"}
-                  </h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between [dir=rtl]:flex-row-reverse">
-                      <span className="text-gray-600 auto-text">
-                        {language === "ar" ? "العميل:" : "Customer:"}
-                      </span>
-                      <span className="font-medium auto-text">
-                        {customerInfo.name}
-                      </span>
-                    </div>
-                    <div className="flex justify-between [dir=rtl]:flex-row-reverse">
-                      <span className="text-gray-600 auto-text">
-                        {language === "ar" ? "الهاتف:" : "Phone:"}
-                      </span>
-                      <span className="font-medium ltr-text">
-                        {customerInfo.phone}
-                      </span>
-                    </div>
-                    <div className="flex justify-between [dir=rtl]:flex-row-reverse">
-                      <span className="text-gray-600 auto-text">
-                        {language === "ar" ? "المبلغ الإجمالي:" : "Total Amount:"}
-                      </span>
-                      <span className="font-bold text-primary ltr-text">
-                        {currencySymbol}{" "}
-                        {(
-                          orderTotalPrice +
-                          (deliveryType === "delivery" ? deliveryFeeSetting : 0)
-                        ).toFixed(2)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between [dir=rtl]:flex-row-reverse">
-                      <span className="text-gray-600 auto-text">
-                        {language === "ar" ? "الطريقة:" : "Method:"}
-                      </span>
-                      <span className="font-medium auto-text">
-                        {deliveryType === "delivery"
-                          ? language === "ar"
-                            ? "توصيل"
-                            : "Delivery"
-                          : language === "ar"
-                            ? "استلام"
-                            : "Pickup"}
-                      </span>
+                {/* Next Steps - Second Priority */}
+                {orderMessages.toggles.displayNextSteps && (
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h3 className="font-medium text-blue-900 auto-text text-sm mb-2">
+                      {language === "ar" ? "ما هي الخطوات التالية؟" : "What's Next?"}
+                    </h3>
+                    <ul className="space-y-2 text-xs text-blue-800 auto-text">
+                      <li className="flex items-start gap-2 [dir=rtl]:flex-row-reverse">
+                        <span className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></span>
+                        <span>{language === "ar" ? "سنقوم بتجهيز طلبك خلال 2-4 ساعات" : "We'll prepare your order within 2-4 hours"}</span>
+                      </li>
+                      <li className="flex items-start gap-2 [dir=rtl]:flex-row-reverse">
+                        <span className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></span>
+                        <span>{language === "ar" ? "سيتم التواصل معك عبر الهاتف للتأكيد" : "We'll contact you by phone to confirm"}</span>
+                      </li>
+                      <li className="flex items-start gap-2 [dir=rtl]:flex-row-reverse">
+                        <span className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></span>
+                        <span>{language === "ar" ? "التوصيل خلال 1-3 أيام عمل" : "Delivery within 1-3 business days"}</span>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+
+                {/* Contact Information - Third Priority */}
+                {orderMessages.toggles.displayContact && (
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <h3 className="font-medium text-gray-900 auto-text text-sm mb-2">
+                      {language === "ar" ? "تحتاج مساعدة؟" : "Need Help?"}
+                    </h3>
+                    <div className="space-y-2 text-xs text-gray-700">
+                      <div className="flex items-center gap-2 [dir=rtl]:flex-row-reverse">
+                        <Phone className="w-3 h-3" />
+                        <span className="ltr-text">{contactPhone}</span>
+                      </div>
+                      <div className="flex items-center gap-2 [dir=rtl]:flex-row-reverse">
+                        <MapPin className="w-3 h-3" />
+                        <span className="auto-text">{pickupAddress}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Order Items */}
-              {messages.toggles.displayOrderItems && (
-                <div className="border-t pt-4">
-                  <h3 className="font-semibold mb-3 auto-text">
-                    {language === "ar" ? "محتويات الطلب:" : "Order Items:"}
-                  </h3>
-                  <div className="space-y-2">
-                    {orderItems.map((item, index) => (
-                      <div
-                        key={`${item.productId}-${item.variantId}-${index}`}
-                        className="flex justify-between items-center p-2 bg-gray-50 rounded [dir=rtl]:flex-row-reverse"
-                      >
-                        <div className="flex items-center gap-2 [dir=rtl]:flex-row-reverse">
-                          {item.productImage && (
-                            <img
-                              src={item.productImage}
-                              alt={item.productName}
-                              className="w-10 h-10 object-cover rounded"
-                            />
-                          )}
-                          <div className="[dir=rtl]:text-right">
-                            <p className="font-medium text-sm auto-text">
-                              {item.productName}
-                            </p>
-                            {item.variantName && (
-                              <p className="text-xs text-gray-600 auto-text">
-                                {language === "ar" ? "النوع:" : "Variant:"}{" "}
-                                {item.variantName}
+                {/* Order Information - Last Priority */}
+                <div className="space-y-4 border-t pt-4">
+                  {/* Order Number */}
+                  {orderMessages.toggles.displayOrderNumber && (
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-gray-700 auto-text mb-2">
+                        {t("checkout.orderNumber")}:
+                      </p>
+                      <Badge variant="outline" className="text-lg px-4 py-2 ltr-text font-mono">
+                        #{orderNumber}
+                      </Badge>
+                    </div>
+                  )}
+
+                  {/* Order Items */}
+                  {orderMessages.toggles.displayOrderItems && (
+                    <div className="space-y-3">
+                      <h3 className="font-medium text-gray-900 auto-text text-sm">
+                        {t("checkout.orderItems")}:
+                      </h3>
+                      <div className="space-y-2 max-h-32 overflow-y-auto">
+                        {items.map((item) => (
+                          <div
+                            key={`${item.productId}-${item.variantId}`}
+                            className="flex justify-between items-center gap-3 p-2 bg-gray-50 rounded text-xs [dir=rtl]:flex-row-reverse"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium auto-text truncate">
+                                {item.productName}
                               </p>
-                            )}
+                              {item.variantName && (
+                                <p className="text-gray-600 auto-text truncate">
+                                  {item.variantName}
+                                </p>
+                              )}
+                              <p className="text-gray-500 auto-text">
+                                {t("store.quantity")}: {item.quantity}
+                              </p>
+                            </div>
+                            <div className="text-right [dir=rtl]:text-left flex-shrink-0">
+                              <p className="font-semibold text-primary ltr-text">
+                                {currencySymbol} {(item.price * item.quantity).toFixed(2)}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                        <div className="text-right [dir=rtl]:text-left">
-                          <p className="text-sm font-medium ltr-text">
-                            {item.quantity} × {currencySymbol} {item.price.toFixed(2)}
-                          </p>
-                          <p className="text-xs text-gray-600 ltr-text">
-                            {currencySymbol} {(item.quantity * item.price).toFixed(2)}
-                          </p>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  )}
 
-                  {/* Order Subtotal */}
-                  <div className="border-t pt-3 mt-3 space-y-2">
-                    <div className="flex justify-between [dir=rtl]:flex-row-reverse">
-                      <span className="text-gray-600 auto-text">
-                        {language === "ar" ? "المجموع الفرعي:" : "Subtotal:"}
-                      </span>
-                      <span className="font-medium ltr-text">
-                        {currencySymbol} {orderTotalPrice.toFixed(2)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between [dir=rtl]:flex-row-reverse">
-                      <span className="text-gray-600 auto-text">
-                        {language === "ar" ? "رسوم التوصيل:" : "Delivery Fee:"}
-                      </span>
-                      <span className="font-medium ltr-text">
-                        {deliveryType === "delivery"
-                          ? `${currencySymbol} ${deliveryFeeSetting.toFixed(2)}`
-                          : language === "ar" ? "مجاني" : "Free"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between [dir=rtl]:flex-row-reverse border-t pt-2">
-                      <span className="font-bold auto-text">
-                        {language === "ar" ? "المجموع الكلي:" : "Total:"}
-                      </span>
-                      <span className="font-bold text-primary ltr-text">
-                        {currencySymbol}{" "}
-                        {(orderTotalPrice + (deliveryType === "delivery" ? deliveryFeeSetting : 0)).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Custom Success Message */}
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <p className="text-green-800 auto-text leading-relaxed">
-                  {getOrderMessages().successMessage}
-                </p>
-              </div>
-
-              {/* Next Steps */}
-              {messages.toggles.displayNextSteps && (
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h3 className="font-semibold text-blue-900 mb-3 auto-text">
-                    {language === "ar"
-                      ? "ما هي الخطوات التالية؟"
-                      : "What's Next?"}
-                  </h3>
-                  {deliveryType === "delivery" ? (
-                    <div className="space-y-2 text-sm text-blue-800">
-                      <div className="flex items-start gap-3 [dir=rtl]:flex-row-reverse [dir=rtl]:text-right">
-                        <div className="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0">
-                          1
-                        </div>
-                        <p className="auto-text flex-1">
-                          {language === "ar"
-                            ? "سنقوم بتجهيز طلبك خلال 2-4 ساعات"
-                            : "We'll process your order within 2-4 hours"}
-                        </p>
+                  {/* Order Totals */}
+                  {orderMessages.toggles.displayTotals && (
+                    <div className="space-y-2 pt-2 border-t">
+                      <div className="flex justify-between items-center text-sm [dir=rtl]:flex-row-reverse">
+                        <span className="auto-text">{t("checkout.subtotal")}:</span>
+                        <span className="text-primary ltr-text">{currencySymbol} {totalPrice.toFixed(2)}</span>
                       </div>
-                      <div className="flex items-start gap-3 [dir=rtl]:flex-row-reverse [dir=rtl]:text-right">
-                        <div className="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0">
-                          2
-                        </div>
-                        <p className="auto-text flex-1">
-                          {language === "ar"
-                            ? "سيصل التوصيل خلال 1-3 أيام عمل"
-                            : "Delivery will arrive in 1-3 business days"}
-                        </p>
+                      <div className="flex justify-between items-center text-sm [dir=rtl]:flex-row-reverse">
+                        <span className="auto-text">{t("checkout.deliveryFee")}:</span>
+                        <span className="text-primary ltr-text">
+                          {deliveryType === "delivery" ? `${currencySymbol} ${deliveryFeeSetting.toFixed(2)}` : `${currencySymbol} 0.00`}
+                        </span>
                       </div>
-                      <div className="flex items-start gap-3 [dir=rtl]:flex-row-reverse [dir=rtl]:text-right">
-                        <div className="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0">
-                          3
-                        </div>
-                        <p className="auto-text flex-1">
-                          {language === "ar"
-                            ? "سيتصل بك السائق عند الوصول"
-                            : "Our driver will call you upon arrival"}
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-3 text-sm text-blue-800">
-                      <div className="flex items-start gap-3 [dir=rtl]:flex-row-reverse [dir=rtl]:text-right">
-                        <div className="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0">
-                          1
-                        </div>
-                        <p className="auto-text flex-1">
-                          {language === "ar"
-                            ? "سيكون طلبك جاهزاً للاستلام خلال يوم واحد"
-                            : "Your order will be ready for pickup in 1 day"}
-                        </p>
-                      </div>
-                      <div className="flex items-start gap-3 [dir=rtl]:flex-row-reverse [dir=rtl]:text-right">
-                        <div className="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0">
-                          2
-                        </div>
-                        <div>
-                          <p className="font-semibold auto-text">
-                            {language === "ar" ? "عنوان الاستلام:" : "Pickup Address:"}
-                          </p>
-                          <p className="text-blue-700 auto-text">
-                            {pickupAddress}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3 [dir=rtl]:flex-row-reverse [dir=rtl]:text-right">
-                        <div className="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0">
-                          3
-                        </div>
-                        <p className="auto-text flex-1">
-                          {language === "ar" ? (
-                            <>اتصل بـ {phoneEl} عند الوصول</>
-                          ) : (
-                            <>Call {phoneEl} when you arrive</>
-                          )}
-                        </p>
+                      <div className="flex justify-between items-center text-base font-bold pt-2 border-t [dir=rtl]:flex-row-reverse">
+                        <span className="auto-text">{t("orders.orderTotal")}:</span>
+                        <span className="text-primary text-lg ltr-text">
+                          {currencySymbol} {(totalPrice + (deliveryType === "delivery" ? deliveryFeeSetting : 0)).toFixed(2)}
+                        </span>
                       </div>
                     </div>
                   )}
                 </div>
-              )}
+              </div>
+            </ScrollArea>
 
-              {/* Contact Information */}
-              {messages.toggles.displayContact && (
-                <div className="border border-orange-200 bg-orange-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-orange-900 mb-2 auto-text [dir=rtl]:text-right">
-                    {language === "ar" ? "تحتاج مساعدة؟" : "Need Help?"}
-                  </h3>
-                  <p className="text-sm text-orange-800 auto-text mb-2 [dir=rtl]:text-right">
-                    {messages.instructions}
-                  </p>
-                  <p className="text-sm text-orange-700 auto-text [dir=rtl]:text-right">
-                    {language === "ar" ? (
-                      <>تواصل معنا على {phoneEl}</>
-                    ) : (
-                      <>Contact us at {phoneEl}</>
-                    )}
-                  </p>
-                </div>
-              )}
-
-              {/* Action Button */}
-              <Button onClick={handleClose} className="w-full" size="lg">
-                <span className="auto-text">
-                  {language === "ar" ? "متابعة التسوق" : "Continue Shopping"}
-                </span>
+            {/* Footer */}
+            <div className="border-t p-4 bg-white">
+              <Button onClick={onClose} className="w-full">
+                {t("checkout.backToStore")}
               </Button>
-              <div id="checkout-success-bottom" />
             </div>
-          </ScrollArea>
+          </div>
         </DialogContent>
       </Dialog>
     );
@@ -965,8 +835,8 @@ export default function CheckoutDialog({ open, onClose }: CheckoutDialogProps) {
                     </div>
                   </div>
 
-                  {/* Payment Method */}
-                  <div className="p-3 sm:p-4 bg-blue-50 rounded-lg border border-blue-200 mb-4">
+                  {/* Payment Method - Always Visible */}
+                  <div className="p-3 sm:p-4 bg-blue-50 rounded-lg border border-blue-200 mb-4 sticky bottom-0 z-10">
                     <div className="flex items-center gap-3 [dir=rtl]:flex-row-reverse">
                       <CreditCard className="w-5 h-5 text-blue-600 [dir=rtl]:order-2 flex-shrink-0" />
                       <div className="[dir=rtl]:order-1 flex-1">

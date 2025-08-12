@@ -134,18 +134,18 @@ export default function Checkout() {
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
               <Check className="h-8 w-8 text-green-600" />
             </div>
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-xl font-semibold auto-text">
               {t("checkout.orderSuccess") || "Order Placed Successfully!"}
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground auto-text leading-relaxed">
               {t("checkout.thankYou") ||
                 "Thank you for your order! We have received your order and will process it shortly."}
             </p>
             <div className="space-y-2">
-              <p className="text-sm font-medium">
+              <p className="text-sm font-medium auto-text">
                 {t("checkout.orderNumber") || "Order Number"}:
               </p>
-              <Badge variant="outline" className="text-lg px-4 py-2 ltr-text">
+              <Badge variant="outline" className="text-lg px-4 py-2 ltr-text font-mono">
                 #{orderNumber}
               </Badge>
             </div>
@@ -174,9 +174,9 @@ export default function Checkout() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 [dir=rtl]:grid-cols-1 [dir=rtl]:lg:grid-cols-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Customer Information */}
-          <div className="space-y-6 [dir=rtl]:order-2 [dir=ltr]:order-1">
+          <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>{t("checkout.customerInfo")}</CardTitle>
@@ -279,7 +279,7 @@ export default function Checkout() {
           </div>
 
           {/* Order Summary */}
-          <div className="[dir=rtl]:order-1 [dir=ltr]:order-2">
+          <div>
             <Card className="sticky top-4">
               <CardHeader>
                 <CardTitle>{t("checkout.orderSummary")}</CardTitle>
@@ -290,9 +290,9 @@ export default function Checkout() {
                   {items.map((item) => (
                     <div
                       key={`${item.productId}-${item.variantId}`}
-                      className="flex justify-between items-start gap-4 p-3 bg-gray-50 rounded-lg [dir=rtl]:flex-row-reverse"
+                      className="flex justify-between items-start gap-4 p-3 bg-gray-50 rounded-lg"
                     >
-                      <div className="flex-1 space-y-1">
+                      <div className="flex-1 space-y-1 text-start">
                         <p className="font-medium text-base auto-text">
                           {item.productName}
                         </p>
@@ -305,7 +305,7 @@ export default function Checkout() {
                           {t("store.quantity")}: {item.quantity}
                         </p>
                       </div>
-                      <div className="text-right [dir=rtl]:text-left">
+                      <div className="text-end flex-shrink-0">
                         <p className="font-semibold text-lg text-primary ltr-text">
                           BD {(item.price * item.quantity).toFixed(2)}
                         </p>
@@ -321,17 +321,17 @@ export default function Checkout() {
 
                 {/* Total */}
                 <div className="space-y-2">
-                  <div className="flex justify-between items-center text-base [dir=rtl]:flex-row-reverse">
-                    <span className="auto-text">{t("checkout.subtotal")}:</span>
-                    <span className="text-primary ltr-text">BD {totalPrice.toFixed(2)}</span>
+                  <div className="flex justify-between items-center text-base">
+                    <span className="auto-text text-start">{t("checkout.subtotal")}:</span>
+                    <span className="text-primary ltr-text text-end">BD {totalPrice.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between items-center text-base [dir=rtl]:flex-row-reverse">
-                    <span className="auto-text">{t("checkout.deliveryFee")}:</span>
-                    <span className="text-primary ltr-text">{deliveryType === "delivery" ? "BD 1.50" : "BD 0.00"}</span>
+                  <div className="flex justify-between items-center text-base">
+                    <span className="auto-text text-start">{t("checkout.deliveryFee")}:</span>
+                    <span className="text-primary ltr-text text-end">{deliveryType === "delivery" ? "BD 1.50" : "BD 0.00"}</span>
                   </div>
-                  <div className="flex justify-between items-center text-xl font-bold p-4 bg-primary/5 rounded-lg [dir=rtl]:flex-row-reverse">
-                    <span className="auto-text">{t("orders.orderTotal")}:</span>
-                    <span className="text-primary text-2xl ltr-text">
+                  <div className="flex justify-between items-center text-xl font-bold p-4 bg-primary/5 rounded-lg">
+                    <span className="auto-text text-start">{t("orders.orderTotal")}:</span>
+                    <span className="text-primary text-2xl ltr-text text-end">
                       BD {(totalPrice + (deliveryType === "delivery" ? 1.5 : 0)).toFixed(2)}
                     </span>
                   </div>
